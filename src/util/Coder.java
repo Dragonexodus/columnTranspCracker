@@ -4,9 +4,12 @@
 package util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+
+import javafx.scene.layout.ColumnConstraints;
 
 /**
  * 
@@ -15,47 +18,69 @@ import java.io.IOException;
 public class Coder {
 
 		
-	final String FILE_NAME;
-	final String TRANSPOSITION;
-	public Coder(String transposition, String fileName){
-		this.FILE_NAME = fileName;
-		this.TRANSPOSITION = transposition;
+	private final String SOURCE_FILE_NAME;
+	private final String DEST_FILE_NAME;
+	private final Transposition TRANSPOSITION;
+	
+	public Coder(String transposition, String sourceFileName){
+		
+		this.SOURCE_FILE_NAME = sourceFileName;
+		this.DEST_FILE_NAME = "encode." + sourceFileName;
+
+		TRANSPOSITION = new Transposition(transposition);
+		
+	}
+	public Coder(String transposition, String sourceFileName, String destFileName){
+		
+		this.SOURCE_FILE_NAME = sourceFileName;
+		this.DEST_FILE_NAME = destFileName;
+
+		TRANSPOSITION = new Transposition(transposition);
 		
 	}
 	
-	public void doSth(String fileName){
+	public void encodeFile(){
+		
+		if(SOURCE_FILE_NAME.isEmpty()){
+			return;
+		}
 		
 		BufferedReader reader = null;
 		try {
-			 reader = new BufferedReader(new FileReader(fileName));
+			 reader = new BufferedReader(new FileReader(SOURCE_FILE_NAME));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("FileNotFound");
 		}
 		
 		if(reader != null){
+			String text = "";
 			
-			String text = null;
 			try {
 				text = reader.readLine();
+				text = text.replaceAll(("[^0-9a-zA-Z]"),"");
+				
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			text = text.replace(" ", "");
-			text = text.replaceAll(("[^0-9a-zA-Z]"),"");
+				System.out.println("FileReadLineError");
+			};
+	
 			System.out.println(text);
 			char[] test = text.toCharArray();
 			System.out.println();
 			
 			BlockMatrix colum = new BlockMatrix(6,test,null);
 			
+			char[][] matrix = colum.getArray();
 			
+			for (char[] cs : matrix) {
+				for (char c : cs) {
+					System.out.println(c);
+				}
+			}
+						
 			try {
 				reader.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("ReaderClose");
 			}
 		}
 				
