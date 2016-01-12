@@ -2,10 +2,10 @@ package util;
 
 public class BlockMatrix {
 	
-	final int BLOCK_LENGTH;
-	final int LINE_LENGTH;
-	final char[][] BLOCK_MATRIX;
-	final Transposition T;
+	private final int BLOCK_LENGTH;
+	private final int LINE_LENGTH;
+	private final char[][] BLOCK_MATRIX;
+	private final Transposition T;
 	
 	/**
 	 * Block Matrix zur Kodierung eines Klartextes.
@@ -41,5 +41,21 @@ public class BlockMatrix {
 	
 	public void transpose(){
 		
+	}
+
+	public int getBlockLength() {
+		return BLOCK_LENGTH;
+	}
+
+	public int getLineLength() {
+		return LINE_LENGTH;
+	}
+
+	public char[][] getBlockMatrix() {
+		return BLOCK_MATRIX;
+	}
+
+	public Transposition getTransposition() {
+		return T;
 	}
 }

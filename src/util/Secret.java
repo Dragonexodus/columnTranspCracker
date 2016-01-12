@@ -14,9 +14,17 @@ public class Secret {
 		
 	}
 	
-	private void decode(){
+	private void code(BlockMatrix blockMatrix){
 		
-		
+		String encoded = "";
+		for(int i = 0; i < blockMatrix.getBlockLength(); i++){
+			
+			for(int j = 0; j < blockMatrix.getLineLength(); j++){
+				
+				//encoded += 
+				
+			}
+		}
 		
 	}
 
