@@ -51,7 +51,7 @@ public class BlockMatrix {
 		return LINE_LENGTH;
 	}
 
-	public char[][] getBlockMatrix() {
+	public char[][] getArray() {
 		return BLOCK_MATRIX;
 	}
 

@@ -14,14 +14,15 @@ public class Secret {
 		
 	}
 	
-	private void code(BlockMatrix blockMatrix){
+	private void code(BlockMatrix blockMatrix, int textColumnWidth){
 		
 		String encoded = "";
+		int column;
 		for(int i = 0; i < blockMatrix.getBlockLength(); i++){
 			
 			for(int j = 0; j < blockMatrix.getLineLength(); j++){
 				
-				//encoded += 
+				encoded += (blockMatrix.getArray()[j][i]);
 				
 			}
 		}
