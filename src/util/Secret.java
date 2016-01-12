@@ -14,13 +14,7 @@ public class Secret {
 		
 	}
 	
-	public String getSecret(){
-		
-		return this.secret;
-		
-	}
-	
-	private void encode(){
+	private void decode(){
 		
 		
 		
