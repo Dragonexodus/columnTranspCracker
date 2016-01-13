@@ -69,9 +69,9 @@ public class Encoder {
 				returnCode = -1;
 			};
 			
-			BlockMatrix colum = new BlockMatrix(this.TRANSPOSITION.getBlockLength()
-					,text.toCharArray(),this.TRANSPOSITION);
-			
+			BlockMatrix colum = new BlockMatrix(text.toCharArray(),this.TRANSPOSITION);
+
+			colum.transpose();
 			char[][] matrix = colum.getArray();
 			
 			try {

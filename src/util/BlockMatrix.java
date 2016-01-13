@@ -1,56 +1,70 @@
 package util;
 
 public class BlockMatrix {
-	
-	private final int BLOCK_LENGTH;
+
+	// private final int BLOCK_LENGTH;
 	private final int LINE_LENGTH;
 	private final char[][] BLOCK_MATRIX;
 	private final Transposition T;
-	
+
 	/**
 	 * Block Matrix zur Kodierung eines Klartextes.
 	 * 
-	 * @param blockLength Blocklänge
-	 * @param text Klartext
+	 * @param blockLength
+	 *            Blocklänge
+	 * @param text
+	 *            Klartext
 	 */
-	public BlockMatrix(int blockLength, char[] text, Transposition t){
-		//Anmerkung: Warum braucht BlockMatrix BlockLänge, 
-		//wo die BlockLänge doch in der Transposition hinterlegt ist?
+	public BlockMatrix(char[] text, Transposition t) {
+		// Anmerkung: Warum braucht BlockMatrix BlockLänge,
+		// wo die BlockLänge doch in der Transposition hinterlegt ist?
 		this.T = t;
-		this.BLOCK_LENGTH = blockLength;
-		
-		
-		if(this.BLOCK_LENGTH > 0){
-			//Prüfe auf Rest, zur Ermittlung der Spaltenlänge
-			if(text.length % this.BLOCK_LENGTH > 0){
-				this.LINE_LENGTH = text.length / (BLOCK_LENGTH+1);
+		// this.BLOCK_LENGTH = blockLength;
+
+		if (t.getBlockLength() > 0) {
+			// Prüfe auf Rest, zur Ermittlung der Spaltenlänge
+			if (text.length % t.getBlockLength() > 0) {
+				this.LINE_LENGTH = text.length / (t.getBlockLength() + 1);
+			} else {
+				this.LINE_LENGTH = text.length / t.getBlockLength();
 			}
-			else{
-				this.LINE_LENGTH = text.length / BLOCK_LENGTH;
-			}
-		}else{
+		} else {
 			this.LINE_LENGTH = 0;
 		}
-		
-		//Initialisiere Block-Matrix
-		this.BLOCK_MATRIX = new char[this.LINE_LENGTH][this.BLOCK_LENGTH];
-		
-		//Fülle Block-Matrix mit Geheimnistext		
-		for(int i=0; i < this.LINE_LENGTH;i++){
-			
-			for(int j=0; j < this.BLOCK_LENGTH; j++){
-				
-				BLOCK_MATRIX[i][j] = text[i*BLOCK_LENGTH + j];
+
+		// Initialisiere Block-Matrix
+		this.BLOCK_MATRIX = new char[this.LINE_LENGTH][t.getBlockLength()];
+
+		// Fülle Block-Matrix mit Geheimnistext
+		for (int i = 0; i < this.LINE_LENGTH; i++) {
+
+			for (int j = 0; j < t.getBlockLength(); j++) {
+
+				BLOCK_MATRIX[i][j] = text[i * t.getBlockLength() + j];
 			}
-		}		
-	}	
-	
-	public void transpose(){
-		//so eine FUnktion in der Transposition Klassen? und das hier private ?
+		}
+	}
+
+	public void transpose() {
+		for (int i = 0; i < T.getBlockLength(); i++) {
+			if (i != T.getTransposition().get(i)) {
+				
+				// eine Kopie von der Spalte erstellen
+				char temp[] = new char[LINE_LENGTH];
+				for (int j = 0; j < temp.length; j++)
+					temp[j] = BLOCK_MATRIX[i][j];
+				
+				// die Spalten in der Matrix werden in der Abhängigkeit von der Abbildung getauscht
+				for (int j = 0; j < temp.length; j++) {
+					BLOCK_MATRIX[j][i] = BLOCK_MATRIX[j][T.getTransposition().get(i)];
+					BLOCK_MATRIX[j][T.getTransposition().get(i)] = temp[j];
+				}
+			}
+		}
 	}
 
 	public int getBlockLength() {
-		return BLOCK_LENGTH;
+		return T.getBlockLength();
 	}
 
 	public int getLineLength() {
