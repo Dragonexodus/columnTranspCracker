@@ -8,7 +8,7 @@ public class EncoderTest {
 
 	@Test
 	public void testSuccess() {
-		Encoder test = new Encoder("112345", "ressource/testFile.txt");
+		Encoder test = new Encoder("012345", "ressource/testFile.txt");
 		assertEquals(0, test.encodeFile());
 	}
 	
