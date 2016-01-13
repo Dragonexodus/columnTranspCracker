@@ -7,29 +7,32 @@ import org.junit.Test;
 public class EncoderTest {
 
 	@Test
-	public void test1encodeFile() {
+	public void testSuccess() {
 		Encoder test = new Encoder("123", "ressource/testFile.txt");
-		test.encodeFile();
-	}
-	@Test
-	public void test2encodeFile() {
-		Encoder test = new Encoder("", "ressource/testFile.txt");
-		test.encodeFile();
-	}
-	@Test
-	public void test3encodeFile() {
-		Encoder test = new Encoder("123", "");
-		test.encodeFile();
-	}
-	@Test
-	public void test4encodeFile() {
-		Encoder test = new Encoder("", "");
-		test.encodeFile();
+		assertEquals(0, test.encodeFile());
 	}
 	
 	@Test
-	public void test5encodeFile() {
+	public void testSuccessWithoutTranspositions() {
+		Encoder test = new Encoder("", "ressource/testFile.txt");
+		assertEquals(0, test.encodeFile());
+	}
+	
+	@Test
+	public void testFailsWithoutFilename() {
+		Encoder test = new Encoder("123", "");
+		assertEquals(-1, test.encodeFile());
+	}
+	
+	@Test
+	public void testFailsWithEmptyStrings() {
+		Encoder test = new Encoder("", "");
+		assertEquals(-1, test.encodeFile());
+	}
+	
+	@Test
+	public void testFailsWithNull() {
 		Encoder test = new Encoder(null, null);
-		test.encodeFile();
+		assertEquals(-1, test.encodeFile());
 	}
 }

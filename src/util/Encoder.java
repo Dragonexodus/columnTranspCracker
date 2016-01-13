@@ -69,8 +69,8 @@ public class Encoder {
 				returnCode = -1;
 			};
 			
-			BlockMatrix colum = new BlockMatrix(TRANSPOSITION.getBlockLength()
-					,text.toCharArray(),TRANSPOSITION);
+			BlockMatrix colum = new BlockMatrix(this.TRANSPOSITION.getBlockLength()
+					,text.toCharArray(),this.TRANSPOSITION);
 			
 			char[][] matrix = colum.getArray();
 			
@@ -86,15 +86,17 @@ public class Encoder {
 			}
 			
 			System.out.println(Arrays.deepToString(colum.getArray()));			
+		
+			try {
+				bufferedWriter.close();
+				reader.close();
+			} catch (IOException e1) {
+				System.out.println("Closing files failed");
+				returnCode = -1;
+			}
 		}
 		
-		try {
-			bufferedWriter.close();
-			reader.close();
-		} catch (IOException e1) {
-			System.out.println("Closing files failed");
-			returnCode = -1;
-		}
+		
 		
 		return returnCode;
 				

@@ -19,12 +19,17 @@ public class BlockMatrix {
 		this.T = t;
 		this.BLOCK_LENGTH = blockLength;
 		
-		//Prüfe auf Rest, zur Ermittlung der Spaltenlänge
-		if(text.length % this.BLOCK_LENGTH > 0){
-			this.LINE_LENGTH = text.length / (BLOCK_LENGTH+1);
-		}
-		else{
-			this.LINE_LENGTH = text.length / BLOCK_LENGTH;
+		
+		if(this.BLOCK_LENGTH > 0){
+			//Prüfe auf Rest, zur Ermittlung der Spaltenlänge
+			if(text.length % this.BLOCK_LENGTH > 0){
+				this.LINE_LENGTH = text.length / (BLOCK_LENGTH+1);
+			}
+			else{
+				this.LINE_LENGTH = text.length / BLOCK_LENGTH;
+			}
+		}else{
+			this.LINE_LENGTH = 0;
 		}
 		
 		//Initialisiere Block-Matrix
