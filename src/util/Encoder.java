@@ -5,12 +5,12 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Random;
 
 //TODO Complete this class
 public class Encoder {
@@ -61,35 +61,38 @@ public class Encoder {
 			String text = "";
 
 			try {
-				//TODO mehrere zeilen as Datei lesen
+				// TODO mehrere zeilen aus Datei lesen
 				text = reader.readLine();
-				
-				//anschließend ersetze alle unerwünschten zeichen in der Datei
+
+				// anschließend ersetze alle unerwünschten zeichen in der Datei
 				text = text.replaceAll(("[^0-9a-zA-Z]"), "");
-				//Fülle mit zeichen auf, falls ungerade zeichenanzahl,
-				//TODO dabei muss zeichenanzahl ggT(Blockgröße,5)
+				// Fülle mit zeichen auf, falls ungerade zeichenanzahl,
+				// TODO dabei muss zeichenanzahl immer stimmen!!
 				if (TRANSPOSITION.getBlockLength() != 0) {
 					int toInsert = text.length() % TRANSPOSITION.getBlockLength();
 					if (toInsert > 0) {
+						final String alphabet = "abcdefghijklmopqrstuvwxyz";
+						final int N = alphabet.length();
+
+						Random r = new Random();
+
 						for (int i = 0; i < toInsert; i++) {
-							text += "y";
+							text += alphabet.charAt(r.nextInt(N));
 						}
 					}
-				}	
+				}
 
 			} catch (IOException e1) {
 				System.out.println("FileReadLineError");
 				returnCode = -1;
 			}
 
-			BlockMatrix colum = new BlockMatrix(text.toCharArray(), this.TRANSPOSITION);
+			final BlockMatrix column = new BlockMatrix(text.toCharArray(), this.TRANSPOSITION);
+			column.transpose();
 
-			colum.transpose();
-			char[][] matrix = colum.getArray();
+			returnCode = writeEncodedText(bufferedWriter, column);
 
-			returnCode = writeEncodedText(returnCode, bufferedWriter, colum, matrix);
-
-			System.out.println(Arrays.deepToString(colum.getArray()));
+			System.out.println(Arrays.deepToString(column.getArray()));
 
 			try {
 				bufferedWriter.close();
@@ -101,15 +104,22 @@ public class Encoder {
 		}
 
 		return returnCode;
-
 	}
 
-	private int writeEncodedText(int returnCode, BufferedWriter bufferedWriter, BlockMatrix colum, char[][] matrix) {
+	/**
+	 * Schreibt codierten Text in die Datei, entsprechend den Vorgaben der Aufgabe
+	 * @param bufferedWriter
+	 * @param colum
+	 * @return
+	 */
+	private int writeEncodedText(BufferedWriter bufferedWriter, BlockMatrix column) {
+		int returnCode = 0;
+		final char[][] matrix = column.getArray();
 		try {
 			long counterSpace = 0;
 			int counterLine = 0;
-			for (int spalte = 0; spalte < colum.getBlockLength(); spalte++) {
-				for (int zeile = 0; zeile < colum.getLineLength(); zeile++) {
+			for (int spalte = 0; spalte < column.getBlockLength(); spalte++) {
+				for (int zeile = 0; zeile < column.getLineLength(); zeile++) {
 					bufferedWriter.write(matrix[zeile][spalte]);
 					counterSpace++;
 					if (counterSpace % 5 == 0) {
@@ -122,7 +132,6 @@ public class Encoder {
 							bufferedWriter.write(" ");
 						}
 					}
-
 				}
 			}
 		} catch (IOException e1) {
