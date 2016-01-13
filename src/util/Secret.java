@@ -13,12 +13,13 @@ public class Secret {
 		
 		
 	}
-	
+	// Es sieht so aus als ob diese Klasse das selbe machen soll wie Encoder???
+	// Begriffsklärung: encode == kodieren, decode == dekodieren
 	private void code(BlockMatrix blockMatrix, int textColumnWidth){
 		
 		String encoded = "";
 		int column;
-		for(int i = 0; i < blockMatrix.getBlockLength(); i++){
+		for(int i = 0; i < blockMatrix.getBlockLength(); i++){ // Besser mit For each
 			
 			for(int j = 0; j < blockMatrix.getLineLength(); j++){
 				

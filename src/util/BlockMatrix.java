@@ -14,7 +14,8 @@ public class BlockMatrix {
 	 * @param text Klartext
 	 */
 	public BlockMatrix(int blockLength, char[] text, Transposition t){
-		
+		//Anmerkung: Warum braucht BlockMatrix BlockLänge, 
+		//wo die BlockLänge doch in der Transposition hinterlegt ist?
 		this.T = t;
 		this.BLOCK_LENGTH = blockLength;
 		
@@ -40,7 +41,7 @@ public class BlockMatrix {
 	}	
 	
 	public void transpose(){
-		
+		//so eine FUnktion in der Transposition Klassen? und das hier private ?
 	}
 
 	public int getBlockLength() {
