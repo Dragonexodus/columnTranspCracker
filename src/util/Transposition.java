@@ -1,30 +1,38 @@
 package util;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Transposition {
-	
+
 	private final List<Integer> PERMUTATION;
 	private final int BLOCK_LENGTH;
-	
-	public Transposition(String permutation){
-		if(permutation != null){
-			permutation.split("");
+
+	public Transposition(String permutation) {
+		if (permutation != null) {
+			String s[];
+			s = permutation.split("");
 			this.BLOCK_LENGTH = permutation.length();
 			this.PERMUTATION = new ArrayList<Integer>(this.BLOCK_LENGTH);
-		}else{
+			for (int i = 0; i < BLOCK_LENGTH; i++) {
+				PERMUTATION.add(i, Integer.parseInt(s[i]));
+			}
+			for (Integer it: PERMUTATION) {
+				System.out.println(it);
+			}
+		} else {
 			this.BLOCK_LENGTH = 0;
 			this.PERMUTATION = null;
 		}
 	}
 
-	public List<Integer> getTransposition(){
+	public List<Integer> getTransposition() {
 		return this.PERMUTATION;
 	}
-	
-	public int getBlockLength(){
+
+	public int getBlockLength() {
 		return this.BLOCK_LENGTH;
 	}
-	
-	//Hier sollte eine Funktion rein, welche den Text transponiert... oder?
+
+	// Hier sollte eine Funktion rein, welche den Text transponiert... oder?
 }

@@ -52,7 +52,7 @@ public class BlockMatrix {
 				// eine Kopie von der Spalte erstellen
 				char temp[] = new char[LINE_LENGTH];
 				for (int j = 0; j < temp.length; j++)
-					temp[j] = BLOCK_MATRIX[i][j];
+					temp[j] = BLOCK_MATRIX[j][i];
 				
 				// die Spalten in der Matrix werden in der Abhängigkeit von der Abbildung getauscht
 				for (int j = 0; j < temp.length; j++) {
@@ -61,6 +61,7 @@ public class BlockMatrix {
 				}
 			}
 		}
+		System.out.println("bla");
 	}
 
 	public int getBlockLength() {
