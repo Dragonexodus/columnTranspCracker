@@ -50,7 +50,7 @@ public class TextFileHandler {
 			
 		}
 		
-		System.out.println(content);
+		//System.out.println(content);
 		return content;
 		
 	}
