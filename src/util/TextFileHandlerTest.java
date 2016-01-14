@@ -2,6 +2,8 @@ package util;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+
 import org.junit.Test;
 
 public class TextFileHandlerTest {
@@ -17,6 +19,9 @@ public class TextFileHandlerTest {
 	
 	@Test
 	public void testWriteFile(){
+		
+		File file = new File("ressource/testOutput.txt");
+		if(file.exists()) file.delete();
 		TextFileHandler fh = new TextFileHandler("ressource/testOutput.txt");
 		String text = "Hallo Geheimnis!";
 		fh.writeText(text);
