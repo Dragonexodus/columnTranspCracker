@@ -48,8 +48,7 @@ public class Cracker {
 				
 			}
 			
-		}
-		
+		}		
 		
 		return true;
 		
