@@ -7,6 +7,17 @@ public class Transposition {
 
 	private final List<Integer> PERMUTATION;
 	private final int BLOCK_LENGTH;
+	
+	public Transposition(int blockLength){
+		
+		this.BLOCK_LENGTH = blockLength;
+		
+		this.PERMUTATION = new ArrayList<Integer>();
+		for(int i = 0; i < this.BLOCK_LENGTH ; i++){
+			this.PERMUTATION.add(i);
+		}
+		
+	}
 
 	public Transposition(String permutation) {
 		if (permutation != null) {
