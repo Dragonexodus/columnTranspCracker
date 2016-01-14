@@ -1,5 +1,7 @@
 package util;
 
+import java.util.Random;
+
 public class BlockMatrix {
 
 	// private final int BLOCK_LENGTH;
@@ -19,21 +21,36 @@ public class BlockMatrix {
 
 		this.T = t;
 
-		if (t.getBlockLength() > 0)
-			this.LINE_LENGTH = text.length / t.getBlockLength();
+		if (t.getBlockLength() > 0){
+			System.out.println("Länge PLAIN-Text: \t"+text.length);
+			System.out.println("Länge BLOCK: \t\t"+t.getBlockLength());
+			
+			//Ermitteln der Spaltenlänge
+			//Nicht vollständig gefüllte Blöcke auffüllen
+			this.LINE_LENGTH = (int)Math.ceil((double)text.length / t.getBlockLength());
+		}
 		else
 			this.LINE_LENGTH = 0;
 
-		System.out.println(LINE_LENGTH);
+		System.out.println("Länge Spalten: \t\t"+LINE_LENGTH);
 		// Initialisiere Block-Matrix
 		this.BLOCK_MATRIX = new char[this.LINE_LENGTH][t.getBlockLength()];
-
+		
+		
 		// Fülle Block-Matrix mit Geheimnistext
 		for (int i = 0; i < this.LINE_LENGTH; i++) {
 
 			for (int j = 0; j < t.getBlockLength(); j++) {
-
-				BLOCK_MATRIX[i][j] = text[i * t.getBlockLength() + j];
+				
+				// Ermitteln der aktuellen Position in PLAIN-Text Zeichenkette
+				// Dient der Vermeidung eines Granzüberlaufes
+				int index = i * t.getBlockLength() + j;
+				
+				// Der letzte Block ist nicht vollständig durch den PLAIN-Text abgedeckt
+				// Auffüllen mit zufälligen Zeichen
+				if(index >= text.length) this.BLOCK_MATRIX[i][j] = (char)(new Random().nextInt(25)+65);
+				// kein Index-Überlauf
+				else BLOCK_MATRIX[i][j] = text[index];
 			}
 		}
 	}

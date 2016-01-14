@@ -6,9 +6,18 @@ import org.junit.Test;
 
 public class SecretFormatterTest {
 
+	
+	
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testGetSecret() {
+		
+		Transposition t = new Transposition("01234");
+		BlockMatrix bm = new BlockMatrix(new String("Hallo Welt").toCharArray(),t);
+		bm.transpose();
+		SecretFormatter sf = new SecretFormatter(bm, 5, 10);
+		
+		assertEquals("H aWl ellot",sf.getSecret());
+		
 	}
 
 }

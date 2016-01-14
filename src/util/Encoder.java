@@ -68,6 +68,7 @@ public class Encoder {
 				text = text.replaceAll(("[^0-9a-zA-Z]"), "");
 				// Fülle mit zeichen auf, falls ungerade zeichenanzahl,
 				// TODO dabei muss zeichenanzahl immer stimmen!!
+				
 				if (TRANSPOSITION.getBlockLength() != 0) {
 					int toInsert = text.length() % TRANSPOSITION.getBlockLength();
 					if (toInsert > 0) {
@@ -81,6 +82,7 @@ public class Encoder {
 						}
 					}
 				}
+				
 
 			} catch (IOException e1) {
 				System.out.println("FileReadLineError");

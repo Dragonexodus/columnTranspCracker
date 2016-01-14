@@ -30,23 +30,20 @@ public class SecretFormatter {
 	private String format(){
 		
 		String formated = "";
-		int width = this.columnWidth;
-		int columns = this.columnsPerLine;
+		
+		int index = 0, lineFeed = this.columnWidth * this.columnsPerLine;
 		for(int i = 0; i < blockMatrix.getBlockLength(); i++){ // Besser mit For each
 			
 			for(int j = 0; j < blockMatrix.getLineLength(); j++){
 				
+				// Prüfe, ob line feed oder space notwendig 
+				if(index > 0 && index % lineFeed == 0) formated += "\n";
+				else if(index > 0 && index % this.columnWidth == 0) formated += " ";
+				
 				formated += (blockMatrix.getArray()[j][i]);
 				
-				if((width -= 1) == 0){
-					width = this.columnWidth;
-					formated += " ";
-				}	
-				
-				if((columns -= 1) == 0){
-					columns = this.columnsPerLine;
-					formated += "\n";
-				}
+				index++;
+											
 			}
 		}
 		
@@ -55,7 +52,7 @@ public class SecretFormatter {
 	}
 	
 	
-	public String getFormatedSecret(){
+	public String getSecret(){
 		
 		return this.formatedSecret;
 		

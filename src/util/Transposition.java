@@ -20,7 +20,8 @@ public class Transposition {
 			for (Integer it: PERMUTATION) {
 				System.out.println(it);
 			}
-		} else {
+		}		
+		else {
 			this.BLOCK_LENGTH = 0;
 			this.PERMUTATION = null;
 		}
