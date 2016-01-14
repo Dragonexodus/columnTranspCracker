@@ -2,6 +2,7 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,7 +16,16 @@ public class TextFileHandler {
 	public TextFileHandler(String path){
 		
 		this.TEXT_FILE = new File(path);
-		
+		if(!this.TEXT_FILE.exists()){
+			
+			try {
+				this.TEXT_FILE.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+				
 	}
 	
 	public String readText(){
@@ -24,10 +34,16 @@ public class TextFileHandler {
 		String content = "";
 		try{
 			reader = new BufferedReader(new FileReader(this.TEXT_FILE));
-			while(true) content += reader.readLine();
+			String tmp;
+			while((tmp = reader.readLine()) != null) content += tmp;
+			reader.close();
 		}
 		catch(FileNotFoundException fnfe){
 			System.out.println("Datei nicht gefunden!");
+		}
+		
+		catch(EOFException eofe){
+			System.out.println("Datei gelesen");
 		}
 		
 		catch(IOException ioe){
@@ -39,19 +55,26 @@ public class TextFileHandler {
 		
 	}
 	
-	public void writeText(String text){
+	public boolean writeText(String text){
 		
 		BufferedWriter writer;
 		
 		try{
 			writer = new BufferedWriter(new FileWriter(this.TEXT_FILE));
 			writer.write(text);
+			writer.close();
 		}
+		
 		catch(FileNotFoundException fnfe){
 			
 			System.out.println("Datei nicht gefunden!");
+			return false;			
 		}
-		catch(IOException ioe){}
+		catch(IOException ioe){
+			return false;
+		}
+		
+		return true;
 		
 	}
 
