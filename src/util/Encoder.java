@@ -60,41 +60,25 @@ public class Encoder {
 		if ((reader != null) && bufferedWriter != null) {
 			String text = "";
 
-			try {
-				// TODO mehrere zeilen aus Datei lesen
-				text = reader.readLine();
-
-				// anschließend ersetze alle unerwünschten zeichen in der Datei
-				text = text.replaceAll(("[^0-9a-zA-Z]"), "");
-				// Fülle mit zeichen auf, falls ungerade zeichenanzahl,
-				// TODO dabei muss zeichenanzahl immer stimmen!!
-				
-				if (TRANSPOSITION.getBlockLength() != 0) {
-					int toInsert = text.length() % TRANSPOSITION.getBlockLength();
-					if (toInsert > 0) {
-						final String alphabet = "abcdefghijklmopqrstuvwxyz";
-						final int N = alphabet.length();
-
-						Random r = new Random();
-
-						for (int i = 0; i < toInsert; i++) {
-							text += alphabet.charAt(r.nextInt(N));
-						}
+			try { // Read file
+				String lineReaded = null;
+				do {
+					lineReaded = reader.readLine();
+					if (lineReaded != null) {
+						text += lineReaded;
 					}
-				}
-				
-
+				} while (lineReaded != null);
 			} catch (IOException e1) {
 				System.out.println("FileReadLineError");
 				returnCode = -1;
 			}
 
+			text = replaceAndFill(text);
+
 			final BlockMatrix column = new BlockMatrix(text.toCharArray(), this.TRANSPOSITION);
+			
 			column.transpose();
-
 			returnCode = writeEncodedText(bufferedWriter, column);
-
-			System.out.println(Arrays.deepToString(column.getArray()));
 
 			try {
 				bufferedWriter.close();
@@ -109,7 +93,41 @@ public class Encoder {
 	}
 
 	/**
-	 * Schreibt codierten Text in die Datei, entsprechend den Vorgaben der Aufgabe
+	 * Ersetze unerwünschte Zeichen aus String und fülle Blöcke auf, damit keine
+	 * allein stehenden Zeichen im Geheimtext enstehen
+	 * 
+	 * @param text
+	 * @return
+	 */
+	private String replaceAndFill(String text) {
+		// anschließend ersetze alle unerwünschten zeichen in der Datei
+		text = text.replaceAll(("[^0-9a-zA-Z]"), "");
+
+		// Fülle mit zeichen auf, falls ungerade zeichenanzahl,
+		int product = TRANSPOSITION.getBlockLength() * 5; // 5 = Buchstabe je
+															// Block
+		int charCount = 0;
+
+		if (TRANSPOSITION.getBlockLength() > 0) {
+			if ((text.length() % product) != 0) { // Muss aufgefüllt werden?
+				int factor = (text.length() / product) + 1;
+				charCount = (product * factor) - text.length(); // Anzahl der
+																// nötigen
+																// Zeichen
+			}
+		}
+		if (charCount > 0) {
+			for (int i = 0; i < charCount; i++) {
+				text += (char) (new Random().nextInt(25) + 65);
+			}
+		}
+		return text;
+	}
+
+	/**
+	 * Schreibt codierten Text in die Datei, entsprechend den Vorgaben der
+	 * Aufgabe
+	 * 
 	 * @param bufferedWriter
 	 * @param colum
 	 * @return
