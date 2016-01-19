@@ -21,8 +21,7 @@ public class TextFileHandler {
 			try {
 				this.TEXT_FILE.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("TextFile Creation failed");
 			}
 		}
 				

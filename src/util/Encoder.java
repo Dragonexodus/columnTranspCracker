@@ -5,6 +5,7 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -44,49 +45,21 @@ public class Encoder {
 	public int encodeFile() {
 		int returnCode = 0;
 
-		BufferedReader reader = null;
-		BufferedWriter bufferedWriter = null;
-		try {
-			reader = new BufferedReader(new FileReader(SOURCE_FILE_NAME));
-			bufferedWriter = new BufferedWriter(new FileWriter(DEST_FILE_NAME));
-		} catch (FileNotFoundException e) {
-			System.out.println("FileNotFound: Source");
-			returnCode = -1;
-		} catch (IOException e) {
-			System.out.println("FileNotFound: Desti");
-			returnCode = -1;
-		}
+		TextFileHandler inFileText = new TextFileHandler(SOURCE_FILE_NAME);
+		String text = inFileText.readText();
 
-		if ((reader != null) && bufferedWriter != null) {
-			String text = "";
-
-			try { // Read file
-				String lineReaded = null;
-				do {
-					lineReaded = reader.readLine();
-					if (lineReaded != null) {
-						text += lineReaded;
-					}
-				} while (lineReaded != null);
-			} catch (IOException e1) {
-				System.out.println("FileReadLineError");
-				returnCode = -1;
+		if (text != null) {
+			if (!text.isEmpty()) {
+				text = replaceAndFill(text);
+				BlockMatrix column = new BlockMatrix(text.toCharArray(), this.TRANSPOSITION);
+				column.transpose();
+				returnCode = writeEncodedText(column);
+			} else {
+				return -1;
 			}
 
-			text = replaceAndFill(text);
-
-			final BlockMatrix column = new BlockMatrix(text.toCharArray(), this.TRANSPOSITION);
-			
-			column.transpose();
-			returnCode = writeEncodedText(bufferedWriter, column);
-
-			try {
-				bufferedWriter.close();
-				reader.close();
-			} catch (IOException e1) {
-				System.out.println("Closing files failed");
-				returnCode = -1;
-			}
+		} else {
+			returnCode = -1;
 		}
 
 		return returnCode;
@@ -128,36 +101,22 @@ public class Encoder {
 	 * Schreibt codierten Text in die Datei, entsprechend den Vorgaben der
 	 * Aufgabe
 	 * 
-	 * @param bufferedWriter
 	 * @param colum
 	 * @return
 	 */
-	private int writeEncodedText(BufferedWriter bufferedWriter, BlockMatrix column) {
-		int returnCode = 0;
-		final char[][] matrix = column.getArray();
-		try {
-			long counterSpace = 0;
-			int counterLine = 0;
-			for (int spalte = 0; spalte < column.getBlockLength(); spalte++) {
-				for (int zeile = 0; zeile < column.getLineLength(); zeile++) {
-					bufferedWriter.write(matrix[zeile][spalte]);
-					counterSpace++;
-					if (counterSpace % 5 == 0) {
-						if (counterLine == 9) {
-							bufferedWriter.write("\n");
-							counterLine = 0;
-							counterSpace = 0;
-						} else {
-							counterLine++;
-							bufferedWriter.write(" ");
-						}
-					}
-				}
-			}
-		} catch (IOException e1) {
-			System.out.println("Writing file failed");
-			returnCode = -1;
-		}
-		return returnCode;
+	private int writeEncodedText(BlockMatrix column) {
+		if (DEST_FILE_NAME != "encode.txt") {
+			File file = new File(DEST_FILE_NAME);
+			if (file.exists())
+				file.delete();
+			TextFileHandler outFileHandler = new TextFileHandler(DEST_FILE_NAME);
+			SecretFormatter secretFormatter = new SecretFormatter(column, 5, 10);
+			boolean check = outFileHandler.writeText(secretFormatter.getSecret());
+		if (check)
+			return 0;
+		else
+			return -1;
+	}else
+		return -1;
 	}
 }
