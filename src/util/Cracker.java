@@ -32,16 +32,44 @@ public class Cracker {
 			
 			Transposition t = new Transposition(k);
 			
+			// Diese dient zum Abschätzen der Transposition
+			Transposition guessed = new Transposition(0);
+			
+						
 			this.bm = new BlockMatrix(this.SECRET.toCharArray(), t);
 			BlockMatrix known = new BlockMatrix(knownWord.toCharArray(), t);
 			
+			// Es wird (im schlechtesten Fall) die ganze Block-Matrix durchsucht
 			for(int i = 0; i < bm.getLineLength()-known.getLineLength(); i++){
 				
-				for(int j = 0 ; j < known.getLineLength() ; j++){
+				// Es wird jedes Zeichen von known Word gesucht
+				for(int l = 0 ; l < k ; l++){
 					
-					boolean found = false;
-					for(int l = 0 ; l < k ; l++){
-						if(bm.getArray()[j][l] == known.getArray()[i+j][l]) found = true;
+					boolean found = true;
+					
+					// Für die Zeile in der Geheimtext Block-Matrix wird jede Stelle auf Vorkommnis
+					// eines Zeichens aus known Word gesucht
+					for(int m = 0; m < k; m++){
+						
+						// In Abhängigkeit der Blocklänge entsteht ein Umbruch in der BM known word
+						// Damit ergibt sich eine Zeilenanzahl
+						for(int j = 0 ; j < known.getLineLength() ; j++){
+							
+							if(bm.getArray()[i+j][m] == known.getArray()[j][l]) found &= true;
+							else{
+								
+								found &= false;
+								break;
+							}
+							
+						}	
+						
+						if(found){
+							
+							guessed.getTransposition().add(m);
+							
+						}
+						
 					}
 					
 				}

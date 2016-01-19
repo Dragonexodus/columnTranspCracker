@@ -17,6 +17,7 @@ public class Transposition {
 			this.PERMUTATION.add(i);
 		}
 		
+		
 	}
 
 	public Transposition(String permutation) {

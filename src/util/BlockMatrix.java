@@ -1,8 +1,5 @@
 package util;
 
-import java.util.Arrays;
-import java.util.Random;
-
 public class BlockMatrix {
 
 	// private final int BLOCK_LENGTH;
