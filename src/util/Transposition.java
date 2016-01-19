@@ -47,5 +47,5 @@ public class Transposition {
 		return this.BLOCK_LENGTH;
 	}
 
-	// Hier sollte eine Funktion rein, welche den Text transponiert... oder?
+	
 }

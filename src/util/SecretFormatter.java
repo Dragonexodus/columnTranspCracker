@@ -32,7 +32,7 @@ public class SecretFormatter {
 		String formated = "";
 		
 		int index = 0, lineFeed = this.columnWidth * this.columnsPerLine;
-		for(int i = 0; i < blockMatrix.getBlockLength(); i++){ // Besser mit For each
+		for(int i = 0; i < blockMatrix.getBlockLength(); i++){
 			
 			for(int j = 0; j < blockMatrix.getLineLength(); j++){
 				
