@@ -50,7 +50,7 @@ public class Cracker {
 
             Transposition tr = new Transposition(str);
 
-            BlockMatrix test = new BlockMatrix(SECRET.toCharArray(), tr);
+            BlockMatrix test = new BlockMatrix(SECRET.toCharArray(), tr, false);
             test.transpose();
 
             //TODO: Testausgabe
@@ -108,9 +108,9 @@ public class Cracker {
             // Diese dient zum Abschätzen der Transposition
             Transposition guessed = new Transposition(0);
 
-            this.bm = new BlockMatrix(this.SECRET.toCharArray(), t);
+            this.bm = new BlockMatrix(this.SECRET.toCharArray(), t, false);
             bm.transpose(); //TODO: Test
-            BlockMatrix known = new BlockMatrix(knownWord.toCharArray(), t, 1);
+            BlockMatrix known = new BlockMatrix(knownWord.toCharArray(), t, true);
 
             //TODO: Test
             if (true)
