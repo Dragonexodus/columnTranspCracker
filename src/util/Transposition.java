@@ -21,19 +21,20 @@ public class Transposition {
     public Transposition(String permutation) {
         if (permutation != null) {
             String s[];
-            s = permutation.split("");
-            this.BLOCK_LENGTH = permutation.length();
-            this.PERMUTATION = new ArrayList<Integer>(this.BLOCK_LENGTH);
-            for (int i = 0; i < BLOCK_LENGTH; i++) {
-                PERMUTATION.add(i, Integer.parseInt(s[i]));
-            }
-            for (Integer it : PERMUTATION) {
+            s = permutation.split(",");
+            if (s.length > 1) {
+                this.BLOCK_LENGTH = s.length;
+                this.PERMUTATION = new ArrayList<Integer>(this.BLOCK_LENGTH);
+                for (int i = 0; i < BLOCK_LENGTH; i++)
+                    PERMUTATION.add(i, Integer.parseInt(s[i]));
+                for (Integer it : PERMUTATION) {
 //                System.out.println(it); // TODO: ich habe kommentiert, da gestört hat
+                }
+                return;
             }
-        } else {
-            this.BLOCK_LENGTH = 0;
-            this.PERMUTATION = null;
         }
+        BLOCK_LENGTH = 0;
+        PERMUTATION = null;
     }
 
     public List<Integer> getTransposition() {

@@ -10,12 +10,12 @@ public class SecretFormatterTest {
     @Test
     public void testGetSecret() {
 
-        Transposition t = new Transposition("01234");
-        BlockMatrix bm = new BlockMatrix(new String("Hallo Welt").toCharArray(), t, false);
+        Transposition t = new Transposition("0,1,2,3,4");
+        BlockMatrix bm = new BlockMatrix(new String("HalloWelt").toCharArray(), t, false);
         bm.transpose();
         SecretFormatter sf = new SecretFormatter(bm, 5, 10);
 
-        assertEquals("H aWl ellot", sf.getSecret());
+        assertEquals("HaWlellot", sf.getSecret());
 
     }
 

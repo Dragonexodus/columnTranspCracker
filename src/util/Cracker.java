@@ -12,7 +12,8 @@ public class Cracker {
     private String plain;
 
     String knownWord;
-    List<Integer> folge;
+    List<Integer> deKey;
+    List<Integer> enKey;
     int firstMatchRow;
     int lineBreak = 0;
 
@@ -43,11 +44,11 @@ public class Cracker {
         int l = 0;
 
         List<Integer> tempList = new ArrayList<>(bm.getBlockLength());
-        for (int i = 0; i < folge.size(); i++)
+        for (int i = 0; i < deKey.size(); i++)
             tempList.add(i);
 
-        String str = folge.toString();
-        str = str.replaceAll(("[,\\[\\] ]"), "");
+        String str = deKey.toString();
+        str = str.replaceAll(("[\\[\\] ]"), "");
         System.out.println(str);
 
         bm.setTr(new Transposition(str));
@@ -56,7 +57,7 @@ public class Cracker {
         for (int k = 0; k < bm.getBlockLength() + 1; k++) {
 
             str = tempList.toString();
-            str = str.replaceAll(("[,\\[\\] ]"), "");
+            str = str.replaceAll(("[\\[\\] ]"), "");
             Collections.rotate(tempList, 1);
             System.out.println("testTR: " + str);
 
@@ -82,16 +83,18 @@ public class Cracker {
                 for (int m = 0; m < test.getBlockLength(); m++) {
 
                     if (foundCount >= knownWord.length()) {
-                        System.out.print("-> TR GEFUNDEN: ");
-                        System.out.println(folge);
+                        System.out.println("-> TR GEFUNDEN: " + deKey);
+
                         kCount--;
                         System.out.println("SHIFT: " + kCount);
-                        Collections.rotate(folge, kCount);
-                        System.out.println("DeKey: " + folge);
-                        System.out.println("EnKey: ");
-                        for (int q = 0; q < folge.size(); q++)
-                            System.out.print(folge.indexOf(q));
-                        System.out.println();
+                        Collections.rotate(deKey, kCount);
+                        System.out.println("DeKey: " + deKey);
+
+                        enKey = new ArrayList<>(deKey.size());
+                        for (int q = 0; q < deKey.size(); q++)
+                            enKey.add(deKey.indexOf(q));
+                        System.out.println("EnKey: " + enKey);
+
                         bm = test;
                         return true;
                     }
@@ -121,7 +124,7 @@ public class Cracker {
             //TODO: Tetst
             Transposition t;
             if (k == 6)
-                t = new Transposition("214053");
+                t = new Transposition("2,1,4,0,5,3");
 //                t = new Transposition("012345");
             else
                 t = new Transposition(k);
@@ -157,7 +160,7 @@ public class Cracker {
                 }
 
             // Init -----------------------------------------------------------
-            folge = new ArrayList<Integer>();
+            deKey = new ArrayList<Integer>();
             int blockSize = k;
             int foundCount = 0;                 // Anzahl der Matches
             int lRest = knownWord.length() % blockSize; // Anzahl der Zeichen in der Letzten Zeile
@@ -184,7 +187,7 @@ public class Cracker {
                         i--;
                         l = 0;
                         m = -1;
-                        folge.clear();
+                        deKey.clear();
                         foundCount = 0;
                         firstMatchRow = 0;
                         foundFirst = false;
@@ -195,7 +198,7 @@ public class Cracker {
                             firstMatchRow = i;
                             foundFirst = true;
                         }
-                        folge.add(m);
+                        deKey.add(m);
                         foundCount++;
                         if ((lRest != 0 && l < lRest) || (lRest == 0 && l < blockSize)) {   // l soll kleiner als der lRest
                             for (int lRow = 1; lRow < lRows; lRow++)                        // es wird nach dem vertikalen knownBM-Block gesucht
@@ -205,7 +208,7 @@ public class Cracker {
                                     } else {            // nicht gefunden -> mOffset++; wieder Suchen
                                         l = 0;
                                         mOffset++;
-                                        folge.clear();
+                                        deKey.clear();
                                         foundCount = 0;
                                         firstMatchRow = 0;
                                         foundFirst = false;
@@ -219,7 +222,7 @@ public class Cracker {
                                     } else {            // nicht gefunden -> mOffset++; wieder Suchen
                                         l = 0;
                                         mOffset++;
-                                        folge.clear();
+                                        deKey.clear();
                                         foundCount = 0;
                                         firstMatchRow = 0;
                                         foundFirst = false;
@@ -235,8 +238,8 @@ public class Cracker {
             }
             if (found) {
                 System.out.print("TR-Folge: ");
-                for (int i = 0; i < folge.size(); ++i)
-                    System.out.print(folge.get(i) + " ");
+                for (int i = 0; i < deKey.size(); ++i)
+                    System.out.print(deKey.get(i) + " ");
                 System.out.println("\n lineBreak: " + lineBreak);
                 return true;
             }
