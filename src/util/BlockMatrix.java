@@ -69,6 +69,25 @@ public class BlockMatrix {
         BLOCK_MATRIX = temp;
     }
 
+    public void transpose2() {
+        for (int i = 0; i < T.getBlockLength(); i++) {
+            if (i != T.getTransposition().get(i)) {
+
+                // eine Kopie von der Spalte erstellen
+                char temp[] = new char[LINE_LENGTH];
+                for (int j = 0; j < temp.length; j++)
+                    temp[j] = BLOCK_MATRIX[j][i];
+
+                // die Spalten in der Matrix werden in der Abhängigkeit von der
+                // Abbildung getauscht
+                for (int j = 0; j < temp.length; j++) {
+                    BLOCK_MATRIX[j][i] = BLOCK_MATRIX[j][T.getTransposition().get(i)];
+                    BLOCK_MATRIX[j][T.getTransposition().get(i)] = temp[j];
+                }
+            }
+        }
+    }
+
     public void setTr(Transposition t) {
         T = t;
     }

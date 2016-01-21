@@ -39,19 +39,33 @@ public class Cracker {
     public boolean testTransposition() {
 
         int foundCount = 0;
+        int kCount = 0;
         int l = 0;
+
+        List<Integer> tempList = new ArrayList<>(bm.getBlockLength());
+        for (int i = 0; i < folge.size(); i++)
+            tempList.add(i);
+
+        String str = folge.toString();
+        str = str.replaceAll(("[,\\[\\] ]"), "");
+        System.out.println(str);
+
+        bm.setTr(new Transposition(str));
+        bm.transpose();
 
         for (int k = 0; k < bm.getBlockLength() + 1; k++) {
 
-            Collections.rotate(folge, 1);
-            String str = folge.toString();
+            str = tempList.toString();
             str = str.replaceAll(("[,\\[\\] ]"), "");
-            System.out.println(str);
+            Collections.rotate(tempList, 1);
+            System.out.println("testTR: " + str);
 
-            Transposition tr = new Transposition(str);
-
-            BlockMatrix test = new BlockMatrix(SECRET.toCharArray(), tr, false);
+            BlockMatrix test = new BlockMatrix(SECRET.toCharArray(), new Transposition(str), false);
+            for (int i = 0; i < bm.getLineLength(); i++)
+                for (int j = 0; j < bm.getBlockLength(); j++)
+                    test.getArray()[i][j] = bm.getArray()[i][j];
             test.transpose();
+            kCount++;
 
             //TODO: Testausgabe
             if (true) {
@@ -70,7 +84,14 @@ public class Cracker {
                     if (foundCount >= knownWord.length()) {
                         System.out.print("-> TR GEFUNDEN: ");
                         System.out.println(folge);
-
+                        kCount--;
+                        System.out.println("SHIFT: " + kCount);
+                        Collections.rotate(folge, kCount);
+                        System.out.println("DeKey: " + folge);
+                        System.out.println("EnKey: ");
+                        for (int q = 0; q < folge.size(); q++)
+                            System.out.print(folge.indexOf(q));
+                        System.out.println();
                         bm = test;
                         return true;
                     }
@@ -100,16 +121,18 @@ public class Cracker {
             //TODO: Tetst
             Transposition t;
             if (k == 6)
-                t = new Transposition("215043");
+                t = new Transposition("214053");
 //                t = new Transposition("012345");
             else
                 t = new Transposition(k);
 
-            // Diese dient zum Abschätzen der Transposition
-            Transposition guessed = new Transposition(0);
-
             this.bm = new BlockMatrix(this.SECRET.toCharArray(), t, false);
             bm.transpose(); //TODO: Test
+            if (false && k == 6) {
+                t = new Transposition("310542");
+                bm.setTr(t);
+                bm.transpose(); //TODO: Test
+            }
             BlockMatrix known = new BlockMatrix(knownWord.toCharArray(), t, true);
 
             //TODO: Test
