@@ -100,7 +100,7 @@ public class Encoder {
      * Schreibt codierten Text in die Datei, entsprechend den Vorgaben der
      * Aufgabe
      *
-     * @param colum
+     * @param column
      * @return
      */
     private int writeEncodedText(BlockMatrix column) {
