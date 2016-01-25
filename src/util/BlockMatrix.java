@@ -88,6 +88,15 @@ public class BlockMatrix {
         }
     }
 
+    public void copyMatrix(char[][] m) {
+        if (LINE_LENGTH > 0 && T.getBlockLength() > 1)
+            for (int i = 0; i < LINE_LENGTH; i++)
+                for (int j = 0; j < T.getBlockLength(); j++)
+                    m[i][j] = BLOCK_MATRIX[i][j];
+        else
+            System.out.println("ERROR: BlockMatrix: copyMatrix(): Blockgröße oder Zeilenanzahl ist falsch !");
+    }
+
     public void print() {
         for (int i = 0; i < LINE_LENGTH; i++) {
             for (int j = 0; j < getBlockLength(); j++) {

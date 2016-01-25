@@ -18,6 +18,10 @@ public class Transposition {
         }
     }
 
+    /**
+     * Hier wird einfach Transpositions-Liste gebildet
+     * @param permutation
+     */
     public Transposition(String permutation) {
         if (permutation != null) {
             String s[];

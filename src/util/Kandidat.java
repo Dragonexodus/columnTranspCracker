@@ -56,21 +56,12 @@ public class Kandidat extends ArrayList<ZeichenListe> {
                     temp[j][i] = this.get(i).get(0).getPositionCol();
             }
         }
-
-        /*//TODO: Test
-        for (int n = 0; n < getPermutations(); n++) {
-            for (int o = 0; o < blockLength; o++)
-                System.out.print(temp[n][o]);
-            System.out.println();
-        }*/
-
         for (int i = 0; i < getPermutations(); i++) {
             permutation = new ArrayList<>(blockLength);
             for (int j = 0; j < blockLength; j++)
                 permutation.add(temp[i][j]);
             permutations.add(permutation);
         }
-
         return permutations;
     }
 

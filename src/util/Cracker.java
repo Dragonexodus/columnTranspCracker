@@ -67,19 +67,14 @@ public class Cracker {
             //TODO: Testausgabe
             if (true) {
                 System.out.println(SECRET);
-                for (int i = 0; i < test.getLineLength(); i++) {
-                    for (int j = 0; j < test.getBlockLength(); j++)
-                        System.out.print(test.getArray()[i][j] + " ");
-                    System.out.println("");
-                }
-                System.out.println("");
+                test.print();
             }
 
             for (int i = firstMatchRow; i < test.getLineLength(); i++) {
                 for (int m = 0; m < test.getBlockLength(); m++) {
 
                     if (foundCount >= knownWord.length()) {
-                        System.out.println("-> TR GEFUNDEN: " + deKey);
+                        System.out.println("-> Tr GEFUNDEN: " + deKey);
 
                         kCount--;
                         System.out.println("SHIFT: " + kCount);
@@ -107,6 +102,60 @@ public class Cracker {
         return false;
     }
 
+    public void testTransposition2() {
+
+        String tranpositionString;
+
+        for (int i = 0; i < kandidaten.size(); i++) {
+
+            TranspositionListe trList = (TranspositionListe) kandidaten.get(i).getPermutationList();
+
+            for (int j = 0; j < trList.size(); j++) {           // alle Transpositionen in dem Kandidat
+
+                int q = 0;
+                int kCount = 0;
+                int foundCount = 0;
+                boolean found = false;
+                tranpositionString = trList.getStringAt(i);
+                System.out.println("Kandidat: " + i + ", TrNr: " + j + ", Tr: " + tranpositionString);
+
+//                bm = new BlockMatrix(SECRET.toCharArray(), new Transposition(kandidaten.get(i).getBlockLength()), false);
+                BlockMatrix test = new BlockMatrix(SECRET.toCharArray(), new Transposition(tranpositionString), false);
+                test.transpose();
+
+                for (int k = 0; k < test.getLineLength(); k++) {
+                    if (found)
+                        break;
+                    for (int l = 0; l < test.getBlockLength(); l++) {
+
+                        if (foundCount >= knownWord.length()) {
+                            System.out.println("-> Tr GEFUNDEN: " + trList.get(j));
+
+                            kCount--;
+                            System.out.println("SHIFT: " + kCount);
+                            Collections.rotate(trList.get(j), kCount);
+                            System.out.println("DeKey: " + trList.get(j));
+
+                            enKey = new ArrayList<>(trList.get(j).size());
+                            for (int m = 0; m < trList.get(j).size(); m++)
+                                enKey.add(trList.get(j).indexOf(m));
+                            System.out.println("EnKey: " + enKey);
+                            found = true;
+                            break;
+                        }
+                        if (test.getArray()[k][q] == knownWord.charAt(q)) {
+                            q++;
+                            foundCount++;
+                        } else {
+                            q = 0;
+                            foundCount = 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public boolean crackByKnownWord() {
 
         // Fall 1: Wir testen eine Block-Länge von 2 bis knownWord.length() --------------------------------------------
@@ -115,7 +164,7 @@ public class Cracker {
             if (SECRET.length() % k != 0) // hier werden nur passende Blockgrößen durchgelassen
                 continue;
 
-            //TODO: Tetst
+            //TODO: Test
             Transposition t;
             if (k == 6)
 //                t = new Transposition("0,1,2,3,4,5");
@@ -239,7 +288,7 @@ public class Cracker {
                             kandidat.appendSave(zeichenListe);
                             firstMatch = true;
                             foundCount = 0;
-//                            zeichen.print();
+                            zeichen.print();
                             zeichen = null;
                         }
                     }
@@ -261,6 +310,7 @@ public class Cracker {
                 //TODO: ...
             }
         }
+        System.out.println("Kandidaten: " + kandidaten.size());
         return false;
     }
 }
