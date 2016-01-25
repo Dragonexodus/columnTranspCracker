@@ -1,7 +1,5 @@
 package util;
 
-import com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteOverridingMethodUsageInfo;
-
 public class BlockMatrix {
 
     // private final int BLOCK_LENGTH;
