@@ -5,6 +5,7 @@ public class BlockMatrix {
     // private final int BLOCK_LENGTH;
     private final int LINE_LENGTH;
     private char[][] BLOCK_MATRIX;
+    private String content;
     private Transposition T;
 
     /**
@@ -98,6 +99,15 @@ public class BlockMatrix {
 
     public int getLineLength() {
         return LINE_LENGTH;
+    }
+    
+    public String getColumn(int  col) {
+    	
+    	if(col > this.getBlockLength()) throw new IndexOutOfBoundsException();
+    	else {
+    		
+    		return this.content.substring(col * this.LINE_LENGTH, ((col+1) * this.LINE_LENGTH) - 1);
+    	}    	
     }
 
     public char[][] getArray() {
