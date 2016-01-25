@@ -2,7 +2,6 @@ package util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class Kandidat extends ArrayList<ZeichenListe> {
 
@@ -58,11 +57,18 @@ public class Kandidat extends ArrayList<ZeichenListe> {
             }
         }
 
-        //TODO: Test
+        /*//TODO: Test
         for (int n = 0; n < getPermutations(); n++) {
             for (int o = 0; o < blockLength; o++)
                 System.out.print(temp[n][o]);
             System.out.println();
+        }*/
+
+        for (int i = 0; i < getPermutations(); i++) {
+            permutation = new ArrayList<>(blockLength);
+            for (int j = 0; j < blockLength; j++)
+                permutation.add(temp[i][j]);
+            permutations.add(permutation);
         }
 
         return permutations;
@@ -76,9 +82,9 @@ public class Kandidat extends ArrayList<ZeichenListe> {
         return count;
     }
 
-    public void printPermutationList(ArrayList<ArrayList<Integer>> list) {
+    public static void printPermutationList(ArrayList<ArrayList<Integer>> list) {
         for (int i = 0; i < list.size(); i++)
-            System.out.print("Per" + i + ": " + list.get(i));
+            System.out.println("Per" + i + ": " + list.get(i));
     }
 
     public void print() {
@@ -148,7 +154,7 @@ public class Kandidat extends ArrayList<ZeichenListe> {
         this.foundCount = foundCount;
     }
 
-    public static int[][] generatePermutations(ArrayList<Integer> list) {
+    private int[][] generatePermutations(ArrayList<Integer> list) {
         int n = list.size();
         int[][] a = new int[factorial(n)][n];
         for (int i = 0; i < n; i++)
@@ -164,7 +170,7 @@ public class Kandidat extends ArrayList<ZeichenListe> {
         return a;
     }
 
-    private static void swap(int[] is, int k, int l) {
+    private void swap(int[] is, int k, int l) {
         int tmp_k = is[k];
         int tmp_l = is[l];
         is[k] = tmp_l;

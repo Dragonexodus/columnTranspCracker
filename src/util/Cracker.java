@@ -239,7 +239,7 @@ public class Cracker {
                             kandidat.appendSave(zeichenListe);
                             firstMatch = true;
                             foundCount = 0;
-                            zeichen.print();
+//                            zeichen.print();
                             zeichen = null;
                         }
                     }
