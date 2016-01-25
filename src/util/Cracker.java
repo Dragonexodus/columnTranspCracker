@@ -159,7 +159,7 @@ public class Cracker {
     public boolean crackByKnownWord() {
 
         // Fall 1: Wir testen eine Block-Länge von 2 bis knownWord.length() --------------------------------------------
-        for (int k = 2; k < knownWord.length() + 1; k++) {
+        for (int k = 2; k < knownWord.length(); k++) {
 
             if (SECRET.length() % k != 0) // hier werden nur passende Blockgrößen durchgelassen
                 continue;
