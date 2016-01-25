@@ -1,5 +1,7 @@
 package util;
 
+import java.util.ArrayList;
+
 public class BlockMatrix {
 
     // private final int BLOCK_LENGTH;
@@ -18,20 +20,21 @@ public class BlockMatrix {
         this.T = t;
 
         if (t.getBlockLength() > 0) {
-            System.out.println("--------------------");
-            System.out.println("Länge PLAIN-Text: \t" + text.length);
-            System.out.println("Länge BLOCK: \t\t" + t.getBlockLength());
-            // Ermitteln der Spaltenlänge
-            if (text.length % t.getBlockLength() == 0)
+            if (text.length % t.getBlockLength() == 0)                      // Ermitteln der Spaltenlänge
                 this.LINE_LENGTH = text.length / t.getBlockLength();        // Geheimtext-Matrix
             else
                 this.LINE_LENGTH = (text.length / t.getBlockLength()) + 1;  // Klartext-Matrix
         } else
             this.LINE_LENGTH = 0;
 
-        System.out.println("Zeilenanzahl: \t\t" + LINE_LENGTH);
-        // Initialisiere Block-Matrix
-        this.BLOCK_MATRIX = new char[this.LINE_LENGTH][t.getBlockLength()];
+        if (false) {
+            System.out.println("--------------------");
+            System.out.println("Länge PLAIN-Text: \t" + text.length);
+            System.out.println("Länge BLOCK: \t\t" + t.getBlockLength());
+            System.out.println("Zeilenanzahl: \t\t" + LINE_LENGTH);
+        }
+
+        this.BLOCK_MATRIX = new char[this.LINE_LENGTH][t.getBlockLength()]; // Initialisiere Block-Matrix
 
         if (!klartextMatrix)    // Geheimtext-Matrix
             for (int i = 0; i < t.getBlockLength(); i++) {      // Spalte
@@ -69,6 +72,18 @@ public class BlockMatrix {
         BLOCK_MATRIX = temp;
     }
 
+    public void transpose(ArrayList<Integer> list) {
+
+        char temp[][] = new char[LINE_LENGTH][list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = 0; j < LINE_LENGTH; j++) {
+                temp[j][i] = BLOCK_MATRIX[j][list.get(i)];
+            }
+        }
+        BLOCK_MATRIX = temp;
+    }
+
     public void transpose2() {
         for (int i = 0; i < T.getBlockLength(); i++) {
             if (i != T.getTransposition().get(i)) {
@@ -88,11 +103,11 @@ public class BlockMatrix {
         }
     }
 
-    public void copyMatrix(char[][] m) {
+    public void copyMatrix(BlockMatrix m) {
         if (LINE_LENGTH > 0 && T.getBlockLength() > 1)
             for (int i = 0; i < LINE_LENGTH; i++)
                 for (int j = 0; j < T.getBlockLength(); j++)
-                    m[i][j] = BLOCK_MATRIX[i][j];
+                    m.getArray()[i][j] = BLOCK_MATRIX[i][j];
         else
             System.out.println("ERROR: BlockMatrix: copyMatrix(): Blockgröße oder Zeilenanzahl ist falsch !");
     }
@@ -104,6 +119,7 @@ public class BlockMatrix {
             }
             System.out.println();
         }
+        System.out.println();
     }
 
     public void setTr(Transposition t) {

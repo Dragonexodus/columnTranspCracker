@@ -20,6 +20,7 @@ public class Transposition {
 
     /**
      * Hier wird einfach Transpositions-Liste gebildet
+     *
      * @param permutation
      */
     public Transposition(String permutation) {
@@ -31,12 +32,23 @@ public class Transposition {
                 this.PERMUTATION = new ArrayList<Integer>(this.BLOCK_LENGTH);
                 for (int i = 0; i < BLOCK_LENGTH; i++)
                     PERMUTATION.add(i, Integer.parseInt(s[i]));
-                for (Integer it : PERMUTATION) {
+//                for (Integer it : PERMUTATION) {
 //                System.out.println(it); // TODO: ich habe kommentiert, da gestört hat
-                }
+//                }
                 return;
             }
         }
+        BLOCK_LENGTH = 0;
+        PERMUTATION = null;
+    }
+
+    public Transposition(ArrayList<Integer> permutation) {
+        if (permutation != null)
+            if (permutation.size() > 1) {
+                this.BLOCK_LENGTH = permutation.size();
+                this.PERMUTATION = permutation;
+                return;
+            }
         BLOCK_LENGTH = 0;
         PERMUTATION = null;
     }

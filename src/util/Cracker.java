@@ -108,7 +108,7 @@ public class Cracker {
 
         for (int i = 0; i < kandidaten.size(); i++) {
 
-            TranspositionListe trList = (TranspositionListe) kandidaten.get(i).getPermutationList();
+            TranspositionListe trList = kandidaten.get(i).getPermutationList();
 
             for (int j = 0; j < trList.size(); j++) {           // alle Transpositionen in dem Kandidat
 
@@ -116,39 +116,63 @@ public class Cracker {
                 int kCount = 0;
                 int foundCount = 0;
                 boolean found = false;
-                tranpositionString = trList.getStringAt(i);
-                System.out.println("Kandidat: " + i + ", TrNr: " + j + ", Tr: " + tranpositionString);
+                System.out.println("Kandidat: " + i + ", TrNr: " + j + ", Tr: " + trList.get(i));
 
 //                bm = new BlockMatrix(SECRET.toCharArray(), new Transposition(kandidaten.get(i).getBlockLength()), false);
-                BlockMatrix test = new BlockMatrix(SECRET.toCharArray(), new Transposition(tranpositionString), false);
-                test.transpose();
+                boolean testFlag = true;
+                Transposition t = null;
+                if (testFlag)
+                    t = new Transposition("4,5,3,2,1,0");
+                else
+                    t = new Transposition(trList.get(i));
 
-                for (int k = 0; k < test.getLineLength(); k++) {
-                    if (found)
-                        break;
-                    for (int l = 0; l < test.getBlockLength(); l++) {
+                BlockMatrix temp = new BlockMatrix(SECRET.toCharArray(), t, false);
 
-                        if (foundCount >= knownWord.length()) {
-                            System.out.println("-> Tr GEFUNDEN: " + trList.get(j));
+                if (testFlag) {
+                    temp.transpose();
+                    temp.setTr(new Transposition(trList.get(i)));
+                }
+                temp.transpose();
 
-                            kCount--;
-                            System.out.println("SHIFT: " + kCount);
-                            Collections.rotate(trList.get(j), kCount);
-                            System.out.println("DeKey: " + trList.get(j));
+                ArrayList<Integer> testList = new ArrayList<>(trList.get(i).size());
+                for (int k = 0; k < trList.get(i).size(); k++)
+                    testList.add(k);
 
-                            enKey = new ArrayList<>(trList.get(j).size());
-                            for (int m = 0; m < trList.get(j).size(); m++)
-                                enKey.add(trList.get(j).indexOf(m));
-                            System.out.println("EnKey: " + enKey);
-                            found = true;
+                for (int n = 0; n < trList.get(i).size() + 1; n++) {
+
+                    Collections.rotate(testList, 1);
+                    BlockMatrix test = new BlockMatrix(SECRET.toCharArray(), new Transposition(testList), false);
+                    temp.copyMatrix(test);
+                    test.transpose();
+                    kCount++;
+
+                    for (int k = 0; k < test.getLineLength(); k++) {
+                        if (found)
                             break;
-                        }
-                        if (test.getArray()[k][q] == knownWord.charAt(q)) {
-                            q++;
-                            foundCount++;
-                        } else {
-                            q = 0;
-                            foundCount = 0;
+                        for (int l = 0; l < test.getBlockLength(); l++) {
+
+                            if (foundCount >= knownWord.length()) {
+                                System.out.println("-> Tr GEFUNDEN: " + trList.get(j));
+
+                                kCount--;
+                                System.out.println("SHIFT: " + kCount);
+                                Collections.rotate(trList.get(j), kCount);
+                                System.out.println("DeKey: " + trList.get(j));
+
+                                enKey = new ArrayList<>(trList.get(j).size());
+                                for (int m = 0; m < trList.get(j).size(); m++)
+                                    enKey.add(trList.get(j).indexOf(m));
+                                System.out.println("EnKey: " + enKey);
+                                found = true;
+                                break;
+                            }
+                            if (test.getArray()[k][l] == knownWord.charAt(q)) {
+                                q++;
+                                foundCount++;
+                            } else {
+                                q = 0;
+                                foundCount = 0;
+                            }
                         }
                     }
                 }
@@ -168,7 +192,7 @@ public class Cracker {
             Transposition t;
             if (k == 6)
 //                t = new Transposition("0,1,2,3,4,5");
-                t = new Transposition("5,4,3,2,1,0");
+                t = new Transposition("4,5,3,2,1,0");
             else
                 t = new Transposition(k);
 
@@ -288,7 +312,7 @@ public class Cracker {
                             kandidat.appendSave(zeichenListe);
                             firstMatch = true;
                             foundCount = 0;
-//                            zeichen.print();
+                            zeichen.print();
                             zeichen = null;
                         }
                     }
@@ -311,6 +335,6 @@ public class Cracker {
             }
         }
         System.out.println("Kandidaten: " + kandidaten.size());
-        return false;
+        return true;
     }
 }
