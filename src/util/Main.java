@@ -8,7 +8,7 @@ public class Main {
     public static void main(String args[]) {
         TextFileHandler tfh = new TextFileHandler("ressource/testFileencode.txt");
         String str = tfh.readText().replaceAll((" "), "");
-        Cracker cr = new Cracker(str, "comput");
+        Cracker cr = new Cracker(str, "machine");
 
         if (cr.crackByKnownWord())
             if (cr.testTransposition())

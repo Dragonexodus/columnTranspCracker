@@ -10,8 +10,17 @@ public class Kandidat extends ArrayList<ZeichenListe> {
     private int firstMatchCol;
     private int foundCount;
 
-    public Kandidat() {
+    enum TYPE {
+        CASE_1,
+        CASE_2
+    }
+
+    private TYPE type;
+    TranspositionListe permutationsListe;
+
+    public Kandidat(TYPE type) {
         this.foundCount = 0;
+        this.type = type;
     }
 
     public static int factorial(int n) {
@@ -25,7 +34,7 @@ public class Kandidat extends ArrayList<ZeichenListe> {
         return false;
     }
 
-    public int getPermutations() {
+    private int getPermutations() {
         int permutation = 1;
 
         for (int i = 0; i < this.size(); i++)
@@ -41,28 +50,34 @@ public class Kandidat extends ArrayList<ZeichenListe> {
         return value;
     }
 
-    public ArrayList<ArrayList<Integer>> getPermutationList() {
+    public TranspositionListe getPermutationList() {
         ArrayList<Integer> permutation;
-        ArrayList<ArrayList<Integer>> permutations = new ArrayList<ArrayList<Integer>>(getPermutations());
-        int[][] temp = new int[getPermutations()][blockLength];
 
-        for (int i = 0; i < blockLength; i++) {
-            for (int j = 0; j < getPermutations() / this.get(i).size(); j++) {
-                if (this.get(i).size() > 1)
-                    for (int k = 0; k < factorial(this.get(i).size()); k++) {
-                        temp[k * (j + 1)][i] = getPermutationAtPos(k, getCharRaletivePos(i), i);
-                    }
-                else
-                    temp[j][i] = this.get(i).get(0).getPositionCol();
+        if (permutationsListe == null) {
+            permutationsListe = new TranspositionListe(getPermutations());
+
+            int[][] temp = new int[getPermutations()][blockLength];
+
+            for (int i = 0; i < blockLength; i++) {
+                for (int j = 0; j < getPermutations() / this.get(i).size(); j++) {
+                    if (this.get(i).size() > 1)
+                        for (int k = 0; k < factorial(this.get(i).size()); k++) {
+                            temp[k * (j + 1)][i] = getPermutationAtPos(k, getCharRaletivePos(i), i);
+                        }
+                    else
+                        temp[j][i] = this.get(i).get(0).getPositionCol();
+                }
             }
+            for (int i = 0; i < getPermutations(); i++) {
+                permutation = new ArrayList<>(blockLength);
+                for (int j = 0; j < blockLength; j++)
+                    permutation.add(temp[i][j]);
+                permutationsListe.add(permutation);
+            }
+            if (type == TYPE.CASE_1)
+                permutationsListe.removeWrongPermutations();
         }
-        for (int i = 0; i < getPermutations(); i++) {
-            permutation = new ArrayList<>(blockLength);
-            for (int j = 0; j < blockLength; j++)
-                permutation.add(temp[i][j]);
-            permutations.add(permutation);
-        }
-        return permutations;
+        return this.permutationsListe;
     }
 
     private int getCharRaletivePos(int pos) {
@@ -73,9 +88,11 @@ public class Kandidat extends ArrayList<ZeichenListe> {
         return count;
     }
 
-    public static void printPermutationList(ArrayList<ArrayList<Integer>> list) {
-        for (int i = 0; i < list.size(); i++)
-            System.out.println("Per" + i + ": " + list.get(i));
+    public void printPermutationList() {
+        if (permutationsListe == null)
+            getPermutationList();
+        for (int i = 0; i < permutationsListe.size(); i++)
+            System.out.println("Per" + i + ": " + permutationsListe.get(i));
     }
 
     public void print() {

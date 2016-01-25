@@ -217,9 +217,9 @@ public class Cracker {
                             }
                             foundCount = 0;
                             kandidat.print();
-                            System.out.println("Permutationen: " + kandidat.getPermutations());
+                            System.out.println("Permutationen: " + kandidat.getPermutationList().size());
 
-                            kandidat.printPermutationList(kandidat.getPermutationList()); //TODO
+                            kandidat.printPermutationList(); //TODO
 
                             kandidat = null;
                         }
@@ -245,7 +245,7 @@ public class Cracker {
                         }
                     if (bm.getArray()[i][m] == known.getArray()[j][l]) {
                         if (kandidat == null) {
-                            kandidat = new Kandidat();
+                            kandidat = new Kandidat(Kandidat.TYPE.CASE_1);
                             zeichenListe = new ZeichenListe();
                         }
                         if (zeichen == null)
@@ -288,7 +288,7 @@ public class Cracker {
                             kandidat.appendSave(zeichenListe);
                             firstMatch = true;
                             foundCount = 0;
-                            zeichen.print();
+//                            zeichen.print();
                             zeichen = null;
                         }
                     }
