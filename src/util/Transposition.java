@@ -25,6 +25,7 @@ public class Transposition {
      */
     public Transposition(String permutation) {
         if (permutation != null) {
+            permutation = permutation.replaceAll((" "), "");
             String s[];
             s = permutation.split(",");
             if (s.length > 1) {

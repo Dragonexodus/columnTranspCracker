@@ -11,7 +11,7 @@ public class Main {
         Cracker cr = new Cracker(str, "computer");
 
         if (cr.crackByKnownWord())
-            cr.testTransposition2();
+            cr.testTransposition();
 //            if (cr.testTransposition())
 //                System.out.println(cr.getCrackedSecret());
     }
