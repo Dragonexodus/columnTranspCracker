@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class Kandidat extends ArrayList<ZeichenListe> {
 
-    private int blockLength;
+    private int blockSize;
     private int firstMatchRow;
     private int firstMatchCol;
     private int foundCount;
@@ -56,10 +56,10 @@ public class Kandidat extends ArrayList<ZeichenListe> {
         if (permutationsListe == null) {
             permutationsListe = new TranspositionListe(getPermutations());
 
-            int[][] temp = new int[getPermutations()][blockLength];
+            int[][] temp = new int[getPermutations()][blockSize]; //TODO: this.size()
 
-            for (int i = 0; i < blockLength; i++) {
-                for (int j = 0; j < getPermutations() / this.get(i).size(); j++) {
+            for (int i = 0; i < this.size(); i++) {                                             // Anzahl der Tupel-Paare   //TODO: this.size()
+                for (int j = 0; j < getPermutations() / factorial(this.get(i).size()); j++) {   //
                     if (this.get(i).size() > 1)
                         for (int k = 0; k < factorial(this.get(i).size()); k++) {
                             temp[k * (j + 1)][i] = getPermutationAtPos(k, getCharRaletivePos(i), i);
@@ -69,8 +69,8 @@ public class Kandidat extends ArrayList<ZeichenListe> {
                 }
             }
             for (int i = 0; i < getPermutations(); i++) {
-                permutation = new ArrayList<>(blockLength);
-                for (int j = 0; j < blockLength; j++)
+                permutation = new ArrayList<>(blockSize);         //TODO: this.size()
+                for (int j = 0; j < blockSize; j++)               //TODO: this.size()
                     permutation.add(temp[i][j]);
                 permutationsListe.add(permutation);
             }
@@ -106,7 +106,7 @@ public class Kandidat extends ArrayList<ZeichenListe> {
     }
 
     public void setFirstMatch(int blockLength, int firstMatchRow, int firstMatchCol) {
-        this.blockLength = blockLength;
+        this.blockSize = blockLength;
         this.firstMatchRow = firstMatchRow;
         this.firstMatchCol = firstMatchCol;
     }
@@ -130,12 +130,12 @@ public class Kandidat extends ArrayList<ZeichenListe> {
             this.add(liste);
     }
 
-    public int getBlockLength() {
-        return blockLength;
+    public int getBlockSize() {
+        return blockSize;
     }
 
-    public void setBlockLength(int blockLength) {
-        this.blockLength = blockLength;
+    public void setBlockSize(int blockSize) {
+        this.blockSize = blockSize;
     }
 
     public int getFirstMatchRow() {
