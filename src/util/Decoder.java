@@ -31,7 +31,10 @@ public class Decoder {
 	
 	public boolean decodeToFile(){
 		
-		BlockMatrix bm = new BlockMatrix(in.readText().toCharArray(), this.TRANSPOSITION, false);
+		String secret = in.readText();
+		secret = secret.replaceAll("\\s", "");
+		
+		BlockMatrix bm = new BlockMatrix(secret.toCharArray(), this.TRANSPOSITION, false);
 		
 		// Transponieren der Block-Matrix nach vorgegebener Transposition
 		bm.transpose();		
