@@ -28,11 +28,16 @@ public class Cracker {
         kandidaten = new KandidatListe();
     }
 
-    public String getCrackedSecret() {
+    public String getCrackedSecret(Transposition t) {
 
-        for (int i = 0; i < bm.getLineLength(); i++)
-            for (int m = 0; m < bm.getBlockLength(); m++)
-                plain += bm.getArray()[i][m];
+        plain = "";
+
+        BlockMatrix bMatrix = new BlockMatrix(SECRET.toCharArray(), t, false);
+        bMatrix.transpose();
+
+        for (int i = 0; i < bMatrix.getLineLength(); i++)
+            for (int m = 0; m < bMatrix.getBlockLength(); m++)
+                plain += bMatrix.getArray()[i][m];
 
         return this.plain;
     }
@@ -52,14 +57,14 @@ public class Cracker {
                     int foundCount = 0;
                     boolean found = false;
                     System.out.println("----------------------------------------");
-                    System.out.println("Kandidat: " + i + ", TrNr: " + j + ", Tr: " + trList.get(i) + ", Blocklänge: " + kandidaten.get(i).getBlockSize());
+                    System.out.println("Kandidat: " + i + ", TrNr: " + j + ", Tr: " + trList.get(j) + ", Blocklänge: " + kandidaten.get(i).getBlockSize());
 
-                    boolean testFlag = true;
+                    boolean testFlag = false;
                     Transposition t = null;
                     if (testFlag && kandidaten.get(i).getBlockSize() == 6)
                         t = new Transposition(tempTr);
                     else
-                        t = new Transposition(trList.get(i));
+                        t = new Transposition(trList.get(j));
 
                     BlockMatrix temp = new BlockMatrix(SECRET.toCharArray(), t, false);
 
@@ -69,17 +74,22 @@ public class Cracker {
                     }
                     temp.transpose();
 
-                    ArrayList<Integer> testList = new ArrayList<>(trList.get(i).size());
-                    for (int k = 0; k < trList.get(i).size(); k++)
+                    ArrayList<Integer> testList = new ArrayList<>(trList.get(j).size());
+                    for (int k = 0; k < trList.get(j).size(); k++)
                         testList.add(k);
 
-                    for (int n = 0; n < trList.get(i).size() + 1; n++) { // max block.size Rotationen
+                    for (int n = 0; n < trList.get(j).size() + 1; n++) { // max block.size Rotationen
+                        if (found)
+                            break;
 
                         Collections.rotate(testList, 1);
                         BlockMatrix test = new BlockMatrix(SECRET.toCharArray(), new Transposition(testList), false);
                         temp.copyMatrix(test);
                         test.transpose();
                         kCount++;
+                        System.out.println("----------------------------------------");
+                        System.out.println("Kandidat: " + i + ", Blocklänge: " + kandidaten.get(i).getBlockSize() + ", Zeile: " + kandidaten.get(i).getFirstMatchRow());
+                        kandidaten.get(i).print();
 
                         for (int k = 0; k < test.getLineLength(); k++) {
                             if (found)
@@ -87,7 +97,7 @@ public class Cracker {
                             for (int l = 0; l < test.getBlockLength(); l++) {
 
                                 if (foundCount >= knownWord.length()) {
-                                    System.out.println("-> Tr GEFUNDEN: " + trList.get(j));
+                                    System.out.println("****### GEFUNDEN ###**** " + trList.get(j));
 
 //                                kCount--;
                                     System.out.println("SHIFT: " + kCount);
@@ -99,6 +109,9 @@ public class Cracker {
                                         enKey.add(trList.get(j).indexOf(m));
                                     System.out.println("EnKey: " + enKey);
                                     found = true;
+
+                                    System.out.println("\nPlainText: " + getCrackedSecret(new Transposition(trList.get(j))) + "\n");
+
                                     break;
                                 }
                                 if (test.getArray()[k][l] == knownWord.charAt(q)) {
@@ -115,7 +128,7 @@ public class Cracker {
             } else {
                 //TODO
                 System.out.println("----------------------------------------");
-                System.out.println("Kandidat: " + i + ", Blocklänge: " + kandidaten.get(i).getBlockSize());
+                System.out.println("Kandidat: " + i + ", Blocklänge: " + kandidaten.get(i).getBlockSize() + ", Zeile: " + kandidaten.get(i).getFirstMatchRow());
                 kandidaten.get(i).print();
             }
         }
@@ -131,13 +144,13 @@ public class Cracker {
 
             //TODO: Test
             Transposition t;
-            if (k == 6)
+            if (false && k == 6)
                 t = new Transposition(tempTr);
             else
                 t = new Transposition(k);
 
             this.bm = new BlockMatrix(this.SECRET.toCharArray(), t, false);
-            bm.transpose(); //TODO: Test
+//            bm.transpose(); //TODO: Test
 
             //TODO: Test
             if (false && k == 6) {
@@ -204,7 +217,7 @@ public class Cracker {
                                     m = kandidat.getFirstMatchCol() + 1;
                                 else {
                                     i++;
-                                    m = -1;
+                                    m = 0;
                                 }
                                 foundCount = 0;
                                 kandidat = null;
@@ -312,7 +325,7 @@ public class Cracker {
                                     m = kandidat.getFirstMatchCol() + 1;
                                 else {
                                     i++;
-                                    m = -1;
+                                    m = 0;
                                 }
                                 foundCount = 0;
                                 kandidat = null;

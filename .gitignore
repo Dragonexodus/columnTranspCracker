@@ -4,3 +4,4 @@
 .gitignore
 .recommenders
 /ressource/
+.idea

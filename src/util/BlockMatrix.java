@@ -29,10 +29,10 @@ public class BlockMatrix {
             this.LINE_LENGTH = 0;
 
         
-        System.out.println("--------------------");
+        /*System.out.println("--------------------");
         System.out.println("Länge PLAIN-Text: \t" + text.length);
         System.out.println("Länge BLOCK: \t\t" + t.getBlockLength());
-        System.out.println("Zeilenanzahl: \t\t" + LINE_LENGTH);
+        System.out.println("Zeilenanzahl: \t\t" + LINE_LENGTH);*/
         
 
         this.BLOCK_MATRIX = new char[this.LINE_LENGTH][t.getBlockLength()]; // Initialisiere Block-Matrix
