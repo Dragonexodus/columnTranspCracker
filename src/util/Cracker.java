@@ -16,6 +16,10 @@ public class Cracker {
     List<Integer> enKey;
     int firstMatchRow;
 
+    //TODO: Test
+//    String tempTr = "1,0,3,2,5,4";
+    String tempTr = "0,1,3,5,2,4";
+
     public Cracker(String secret, String knownWord) {
         this.SECRET = secret;
         this.knownWord = knownWord;
@@ -33,93 +37,102 @@ public class Cracker {
         return this.plain;
     }
 
-    public boolean testTransposition() {
+    public void testTransposition() {
 
-        int foundCount = 0;
-        int kCount = 0;
-        int l = 0;
+        for (int i = 0; i < kandidaten.size(); i++) {
 
-        List<Integer> tempList = new ArrayList<>(bm.getBlockLength());
-        for (int i = 0; i < deKey.size(); i++)
-            tempList.add(i);
+            if (kandidaten.get(i).getBlockSize() <= knownWord.length()) {
 
-        String str = deKey.toString();
-        str = str.replaceAll(("[\\[\\] ]"), "");
-        System.out.println(str);
+                TranspositionListe trList = kandidaten.get(i).getPermutationList();
 
-        bm.setTr(new Transposition(str));
-        bm.transpose();
+                for (int j = 0; j < trList.size(); j++) {           // alle Transpositionen in dem Kandidat
 
-        for (int k = 0; k < bm.getBlockLength() + 1; k++) {
+                    int q = 0;
+                    int kCount = 0;
+                    int foundCount = 0;
+                    boolean found = false;
+                    System.out.println("----------------------------------------");
+                    System.out.println("Kandidat: " + i + ", TrNr: " + j + ", Tr: " + trList.get(i) + ", Blocklänge: " + kandidaten.get(i).getBlockSize());
 
-            str = tempList.toString();
-            str = str.replaceAll(("[\\[\\] ]"), "");
-            Collections.rotate(tempList, 1);
-            System.out.println("testTR: " + str);
+                    boolean testFlag = true;
+                    Transposition t = null;
+                    if (testFlag && kandidaten.get(i).getBlockSize() == 6)
+                        t = new Transposition(tempTr);
+                    else
+                        t = new Transposition(trList.get(i));
 
-            BlockMatrix test = new BlockMatrix(SECRET.toCharArray(), new Transposition(str), false);
-            for (int i = 0; i < bm.getLineLength(); i++)
-                for (int j = 0; j < bm.getBlockLength(); j++)
-                    test.getArray()[i][j] = bm.getArray()[i][j];
-            test.transpose();
-            kCount++;
+                    BlockMatrix temp = new BlockMatrix(SECRET.toCharArray(), t, false);
 
-            //TODO: Testausgabe
-            if (true) {
-                System.out.println(SECRET);
-                for (int i = 0; i < test.getLineLength(); i++) {
-                    for (int j = 0; j < test.getBlockLength(); j++)
-                        System.out.print(test.getArray()[i][j] + " ");
-                    System.out.println("");
-                }
-                System.out.println("");
-            }
-
-            for (int i = firstMatchRow; i < test.getLineLength(); i++) {
-                for (int m = 0; m < test.getBlockLength(); m++) {
-
-                    if (foundCount >= knownWord.length()) {
-                        System.out.println("-> TR GEFUNDEN: " + deKey);
-
-                        kCount--;
-                        System.out.println("SHIFT: " + kCount);
-                        Collections.rotate(deKey, kCount);
-                        System.out.println("DeKey: " + deKey);
-
-                        enKey = new ArrayList<>(deKey.size());
-                        for (int q = 0; q < deKey.size(); q++)
-                            enKey.add(deKey.indexOf(q));
-                        System.out.println("EnKey: " + enKey);
-
-                        bm = test;
-                        return true;
+                    if (testFlag && kandidaten.get(i).getBlockSize() == 6) {
+                        temp.transpose();
+                        temp.setTr(new Transposition(trList.get(i)));
                     }
-                    if (test.getArray()[i][m] == knownWord.charAt(l)) {
-                        l++;
-                        foundCount++;
-                    } else {
-                        l = 0;
-                        foundCount = 0;
+                    temp.transpose();
+
+                    ArrayList<Integer> testList = new ArrayList<>(trList.get(i).size());
+                    for (int k = 0; k < trList.get(i).size(); k++)
+                        testList.add(k);
+
+                    for (int n = 0; n < trList.get(i).size() + 1; n++) { // max block.size Rotationen
+
+                        Collections.rotate(testList, 1);
+                        BlockMatrix test = new BlockMatrix(SECRET.toCharArray(), new Transposition(testList), false);
+                        temp.copyMatrix(test);
+                        test.transpose();
+                        kCount++;
+
+                        for (int k = 0; k < test.getLineLength(); k++) {
+                            if (found)
+                                break;
+                            for (int l = 0; l < test.getBlockLength(); l++) {
+
+                                if (foundCount >= knownWord.length()) {
+                                    System.out.println("-> Tr GEFUNDEN: " + trList.get(j));
+
+//                                kCount--;
+                                    System.out.println("SHIFT: " + kCount);
+                                    Collections.rotate(trList.get(j), kCount);
+                                    System.out.println("DeKey: " + trList.get(j));
+
+                                    enKey = new ArrayList<>(trList.get(j).size());
+                                    for (int m = 0; m < trList.get(j).size(); m++)
+                                        enKey.add(trList.get(j).indexOf(m));
+                                    System.out.println("EnKey: " + enKey);
+                                    found = true;
+                                    break;
+                                }
+                                if (test.getArray()[k][l] == knownWord.charAt(q)) {
+                                    q++;
+                                    foundCount++;
+                                } else {
+                                    q = 0;
+                                    foundCount = 0;
+                                }
+                            }
+                        }
                     }
                 }
+            } else {
+                //TODO
+                System.out.println("----------------------------------------");
+                System.out.println("Kandidat: " + i + ", Blocklänge: " + kandidaten.get(i).getBlockSize());
+                kandidaten.get(i).print();
             }
         }
-        return false;
     }
 
     public boolean crackByKnownWord() {
 
         // Fall 1: Wir testen eine Block-Länge von 2 bis knownWord.length() --------------------------------------------
-        for (int k = 2; k < knownWord.length() + 1; k++) {
+        for (int k = 2; k < 21; k++) {
 
             if (SECRET.length() % k != 0) // hier werden nur passende Blockgrößen durchgelassen
                 continue;
 
-            //TODO: Tetst
+            //TODO: Test
             Transposition t;
             if (k == 6)
-//                t = new Transposition("0,1,2,3,4,5");
-                t = new Transposition("5,4,3,2,1,0");
+                t = new Transposition(tempTr);
             else
                 t = new Transposition(k);
 
@@ -128,7 +141,7 @@ public class Cracker {
 
             //TODO: Test
             if (false && k == 6) {
-                t = new Transposition("3,1,0,5,4,2");
+                t = new Transposition("0, 1, 4, 2, 5, 3");
                 bm.setTr(t);
                 bm.transpose();
             }
@@ -137,6 +150,7 @@ public class Cracker {
 
             BlockMatrix known = new BlockMatrix(knownWord.toCharArray(), t, true);
             known.print();
+            System.out.println("Blocklänge: " + k + "\n");
 
             // Init -----------------------------------------------------------
             int blockSize = k;
@@ -151,116 +165,200 @@ public class Cracker {
             ZeichenListe zeichenListe = null;
             Zeichen zeichen = null;
 
-            for (int i = 0; i < bm.getLineLength() - lRows; i++) {  // i-Zeilen der BM
-                for (int m = 0; m < blockSize + 1; m++) {           // m-Spalten in der BM
+            if (k < knownWord.length()) {
+                for (int i = 0; i < bm.getLineLength() - lRows; i++) {  // i-Zeilen der BM
+                    for (int m = 0; m < blockSize + 1; m++) {           // m-Spalten in der BM
 
-                    if (kandidat != null)
-                        if (kandidat.getFoundCount() >= knownWord.length() && m >= blockSize) { // nach Gefunden wird alles neuinit -> zum Testen
-                            System.out.println("-> GEFUNDEN !!!");
-                            kandidaten.add(kandidat);
-                            l = 0;
-                            i = kandidat.getFirstMatchRow();
-                            if (kandidat.getFirstMatchCol() + 1 < blockSize)
-                                m = kandidat.getFirstMatchCol() + 1;
-                            else {
-                                i++;
-                                m = -1;
-                            }
-                            foundCount = 0;
-                            kandidat.print();
-                            System.out.println("Permutationen: " + kandidat.getPermutations());
-
-                            kandidat.printPermutationList(kandidat.getPermutationList()); //TODO
-
-                            kandidat = null;
-                        }
-                    if (m >= blockSize)
-                        m = 0;
-                    if (i >= bm.getLineLength() - lRows)
-                        break;
-                    if (l >= blockSize)
-                        System.out.println("ERROR: Cracker: crackByKnownWord(): l to long !");
-
-                    if (kandidat != null)                           // wenn keine Zeichen in der (relativ) 2-ten Spalte gefunden werden -> fange die Suche neu an
-                        if (kandidat.getFoundCount() > 0 && i > kandidat.getFirstMatchRow() + lRows - 1) {
-                            l = 0;
-                            i = kandidat.getFirstMatchRow();
-                            if (kandidat.getFirstMatchCol() + 1 < blockSize)
-                                m = kandidat.getFirstMatchCol() + 1;
-                            else {
-                                i++;
-                                m = -1;
-                            }
-                            foundCount = 0;
-                            kandidat = null;
-                        }
-                    if (bm.getArray()[i][m] == known.getArray()[j][l]) {
-                        if (kandidat == null) {
-                            kandidat = new Kandidat();
-                            zeichenListe = new ZeichenListe();
-                        }
-                        if (zeichen == null)
-                            zeichen = new Zeichen(bm.getArray()[i][m], m);
-
-                        if (zeichenListe == null)
-                            zeichenListe = new ZeichenListe();
-
-                        if (zeichenListe.size() <= 0)
-                            foundCount++;
-
-                        if ((lRest != 0 && l < lRest) || (lRest == 0 && l < blockSize)) {   // l soll kleiner als der lRest sein
-                            for (int lRow = 1; lRow < lRows; lRow++)                        // es wird nach dem vertikalen knownBM-Block gesucht
-                                if (bm.getArray()[i + lRow][m] == known.getArray()[j + lRow][l]) {
-                                    if (zeichenListe.size() <= 0)
-                                        foundCount++;
-                                } else {                                                    // nicht gefunden -> mOffset++; wieder Suchen
-                                    foundCount = 0;
-                                    zeichen = null;
-                                    break;
+                        if (kandidat != null)
+                            if (kandidat.getFoundCount() >= knownWord.length() && m >= blockSize) { // nach Gefunden wird alles neuinit -> zum Testen
+                                System.out.println("-> GEFUNDEN !!!");
+                                kandidaten.add(kandidat);
+                                l = 0;
+                                i = kandidat.getFirstMatchRow();
+                                if (kandidat.getFirstMatchCol() + 1 < blockSize)
+                                    m = kandidat.getFirstMatchCol() + 1;
+                                else {
+                                    i++;
+                                    m = -1;
                                 }
-                        } else if (lRest != 0 && l < blockSize) {
-                            for (int lRow = 1; lRow < lRows - 1; lRow++)                    // es wird nach dem vertikalen knownBM-Block gesucht
-                                if (bm.getArray()[i + lRow][m] == known.getArray()[j + lRow][l]) {
-                                    if (zeichenListe.size() <= 0)
-                                        foundCount++;
-                                } else {                                                    // nicht gefunden -> mOffset++; wieder Suchen
-                                    foundCount = 0;
-                                    zeichen = null;
-                                    break;
-                                }
-                        } else
-                            System.out.println("ERROR: no enter !");
+                                foundCount = 0;
+                                kandidat.print();
+                                System.out.println("Permutationen: " + kandidat.getPermutationList().size());
 
-                        if (zeichen != null) {
-                            zeichenListe.add(zeichen);
-                            if (kandidat.getFoundCount() <= 0)
-                                kandidat.setFirstMatch(blockSize, i, m);
-                            kandidat.setFoundCount(kandidat.getFoundCount() + foundCount);
-                            kandidat.appendSave(zeichenListe);
-                            firstMatch = true;
-                            foundCount = 0;
-//                            zeichen.print();
-                            zeichen = null;
+//                                kandidat.printPermutationList(); //TODO
+
+                                kandidat = null;
+                            }
+                        if (m >= blockSize)
+                            m = 0;
+                        if (i >= bm.getLineLength() - lRows)
+                            break;
+                        if (l >= blockSize)
+                            System.out.println("ERROR: Cracker: crackByKnownWord(): l to long !");
+
+                        if (kandidat != null)                           // wenn keine Zeichen in der (relativ) 2-ten Zeile gefunden werden -> fange die Suche neu an
+                            if (kandidat.getFoundCount() > 0 && i > kandidat.getFirstMatchRow() + lRows - 1) {
+                                l = 0;
+                                i = kandidat.getFirstMatchRow();
+                                if (kandidat.getFirstMatchCol() + 1 < blockSize)
+                                    m = kandidat.getFirstMatchCol() + 1;
+                                else {
+                                    i++;
+                                    m = -1;
+                                }
+                                foundCount = 0;
+                                kandidat = null;
+                            }
+                        if (bm.getArray()[i][m] == known.getArray()[j][l]) {
+                            if (kandidat == null) {
+                                kandidat = new Kandidat(Kandidat.TYPE.CASE_1);
+                                zeichenListe = new ZeichenListe();
+                            }
+                            if (zeichen == null)
+                                zeichen = new Zeichen(bm.getArray()[i][m], m);
+
+                            if (zeichenListe == null)
+                                zeichenListe = new ZeichenListe();
+
+                            if (zeichenListe.size() <= 0)
+                                foundCount++;
+
+                            if ((lRest != 0 && l < lRest) || (lRest == 0 && l < blockSize)) {   // l soll kleiner als der lRest sein
+                                for (int lRow = 1; lRow < lRows; lRow++)                        // es wird nach dem vertikalen knownBM-Block gesucht
+                                    if (bm.getArray()[i + lRow][m] == known.getArray()[j + lRow][l]) {
+                                        if (zeichenListe.size() <= 0)
+                                            foundCount++;
+                                    } else {                                                    // nicht gefunden -> mOffset++; wieder Suchen
+                                        foundCount = 0;
+                                        zeichen = null;
+                                        break;
+                                    }
+                            } else if (lRest != 0 && l < blockSize) {
+                                for (int lRow = 1; lRow < lRows - 1; lRow++)                    // es wird nach dem vertikalen knownBM-Block gesucht
+                                    if (bm.getArray()[i + lRow][m] == known.getArray()[j + lRow][l]) {
+                                        if (zeichenListe.size() <= 0)
+                                            foundCount++;
+                                    } else {                                                    // nicht gefunden -> mOffset++; wieder Suchen
+                                        foundCount = 0;
+                                        zeichen = null;
+                                        break;
+                                    }
+                            } else
+                                System.out.println("ERROR: no enter !");
+
+                            if (zeichen != null) {
+                                zeichenListe.add(zeichen);
+                                if (kandidat.getFoundCount() <= 0)
+                                    kandidat.setFirstMatch(blockSize, i, m);
+                                kandidat.setFoundCount(kandidat.getFoundCount() + foundCount);
+                                kandidat.appendSave(zeichenListe);
+                                firstMatch = true;
+                                foundCount = 0;
+//                                zeichen.print();
+                                zeichen = null;
+                            }
+                        }
+                        if (m >= blockSize - 1) {
+                            if (firstMatch) {
+                                l++;
+                                firstMatch = false;
+                                zeichenListe = null;
+                            } else {
+                                i++;
+                            }
                         }
                     }
-                    if (m >= blockSize - 1) {
-                        if (firstMatch) {
-                            l++;
-                            firstMatch = false;
-                            zeichenListe = null;
-                        } else {
-                            i++;
+                }
+            } else { // Fall 2: Wir testen eine Block-Länge von knownWord.length() bis k
+
+                int iOld = 0;
+
+                for (int i = 0; i < bm.getLineLength(); i++) {
+                    for (int m = 0; m < bm.getBlockLength() + 1; m++) {
+
+                        if (kandidat != null)
+                            if (kandidat.getFoundCount() >= knownWord.length() && m >= blockSize) { // nach Gefunden wird alles neuinit -> zum Testen
+                                System.out.println("-> GEFUNDEN !!!");
+                                kandidaten.add(kandidat);
+                                l = 0;
+                                i = kandidat.getFirstMatchRow();
+                                if (kandidat.getFirstMatchCol() + 1 < blockSize)
+                                    m = kandidat.getFirstMatchCol() + 1;
+                                else {
+                                    i++;
+                                    m = -1;
+                                }
+                                foundCount = 0;
+//                                kandidat.print();
+                                System.out.println("Permutationen: " + kandidat.getPermutationList().size());
+
+//                                kandidat.printPermutationList(); //TODO
+
+                                kandidat = null;
+                            }
+                        if (m >= blockSize)
+                            m = 0;
+                        if (i >= bm.getLineLength() - 1)
+                            break;
+                        if (l >= knownWord.length()) {
+                            System.out.println("ERROR: Cracker: crackByKnownWord(): l to long ! -2");
+                        }
+
+                        if (kandidat != null)
+                            if (i > kandidat.getFirstMatchRow() + 1) {
+                                l = 0;
+                                i = kandidat.getFirstMatchRow();
+                                if (kandidat.getFirstMatchCol() + 1 < blockSize)
+                                    m = kandidat.getFirstMatchCol() + 1;
+                                else {
+                                    i++;
+                                    m = -1;
+                                }
+                                foundCount = 0;
+                                kandidat = null;
+                            }
+
+                        if (bm.getArray()[i][m] == knownWord.charAt(l)) {
+                            if (kandidat == null) {
+                                kandidat = new Kandidat(Kandidat.TYPE.CASE_2);
+                                zeichenListe = new ZeichenListe();
+                            }
+                            if (zeichen == null)
+                                zeichen = new Zeichen(bm.getArray()[i][m], m);
+                            if (zeichenListe == null)
+                                zeichenListe = new ZeichenListe();
+                            if (zeichenListe.size() <= 0)
+                                foundCount++;
+
+                            if (zeichen != null) {
+                                zeichenListe.add(zeichen);
+                                if (kandidat.getFoundCount() <= 0)
+                                    kandidat.setFirstMatch(blockSize, i, m);
+                                kandidat.setFoundCount(kandidat.getFoundCount() + foundCount);
+                                kandidat.appendSave(zeichenListe);
+                                firstMatch = true;
+                                foundCount = 0;
+//                                zeichen.print();
+                                zeichen = null;
+                            }
+                        }
+                        if (m >= blockSize - 1) {
+                            if (firstMatch) {
+//                                    if (i < kandidat.getFirstMatchRow() + 1)
+//                                        i++;
+//                                    else {
+                                l++;
+                                firstMatch = false;
+                                zeichenListe = null;
+//                                    }
+                            } else
+                                i++;
                         }
                     }
                 }
             }
         }
-        // Fall 2: Wir testen eine Block-Länge von knownWord.length()+1 bis knownWord.length()+k -----------------------
-        if (true) {
-            for (int k = bm.getBlockLength() + 1; k < bm.getBlockLength() + 10; k++) {
-                //TODO: ...
-            }
-        }
-        return false;
+        System.out.println("Kandidaten: " + kandidaten.size());
+        return true;
     }
 }
