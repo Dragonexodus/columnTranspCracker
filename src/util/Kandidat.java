@@ -5,7 +5,11 @@ import java.util.Arrays;
 
 public class Kandidat extends ArrayList<ZeichenListe> {
 
-    private int blockSize;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int blockSize;
     private int firstMatchRow;
     private int firstMatchCol;
     private int foundCount;

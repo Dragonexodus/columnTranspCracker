@@ -7,7 +7,12 @@ import java.util.ArrayList;
  */
 public class ZeichenListe extends ArrayList<Zeichen> {
 
-    public char getChar() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public char getChar() {
         if (this.size() > 0)
             return this.get(0).getC();
         else

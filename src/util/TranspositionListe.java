@@ -7,7 +7,12 @@ import java.util.ArrayList;
  */
 public class TranspositionListe extends ArrayList<ArrayList<Integer>> {
 
-    public TranspositionListe(int length) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public TranspositionListe(int length) {
         super(length);
     }
 
