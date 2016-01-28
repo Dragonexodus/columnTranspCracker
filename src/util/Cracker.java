@@ -8,7 +8,6 @@ public class Cracker {
 
     private BlockMatrix bm;
     private final String SECRET;
-    private String plain;
 
     KandidatListe kandidaten;
     String knownWord;
@@ -23,15 +22,13 @@ public class Cracker {
     public Cracker(String secret, String knownWord) {
         this.SECRET = secret;
         this.knownWord = knownWord;
-        this.plain = "";
         deKey = new ArrayList<Integer>();
         kandidaten = new KandidatListe();
     }
 
     public String getCrackedSecret(Transposition t) {
 
-        plain = "";
-
+        String plain = new String();
         BlockMatrix bMatrix = new BlockMatrix(SECRET.toCharArray(), t, false);
         bMatrix.transpose();
 
@@ -39,7 +36,7 @@ public class Cracker {
             for (int m = 0; m < bMatrix.getBlockLength(); m++)
                 plain += bMatrix.getArray()[i][m];
 
-        return this.plain;
+        return plain;
     }
 
     public void testTransposition() {
