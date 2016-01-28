@@ -2,6 +2,8 @@ package util;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+
 import org.junit.Test;
 
 public class EncoderTest {
@@ -10,12 +12,14 @@ public class EncoderTest {
     public void testSuccess() {
         Encoder test = new Encoder("0,1,2,3,4,5", "ressource/testFile.txt");
         assertEquals(0, test.encodeFile());
+        new File("ressource/testFileEncoded.txt").delete();
     }
 
     @Test
     public void testSuccessWithoutTranspositions() {
         Encoder test = new Encoder("", "ressource/testFile.txt");
         assertEquals(0, test.encodeFile());
+        new File("ressource/testFileEncoded.txt").delete();
     }
 
     @Test
@@ -35,4 +39,14 @@ public class EncoderTest {
         Encoder test = new Encoder(null, null);
         assertEquals(-1, test.encodeFile());
     }
+    
+    @Test
+    public void testGenerateFiles(){
+    	
+    	Encoder enc = new Encoder("0,1,2,3,4,5","ressource/testOutput.txt");
+    	enc.encodeFile();
+    	assertEquals(true,new File("ressource/testOutputEncoded.txt").exists());
+    	new File("ressource/testFileEncoded.txt").delete();
+    }
+    
 }

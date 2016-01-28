@@ -24,9 +24,9 @@ public class Encoder {
         if (sourceFileName != null) {
             this.SOURCE_FILE_NAME = sourceFileName;
             if (sourceFileName.contains(".txt")) {
-                this.DEST_FILE_NAME = sourceFileName.replace(".txt", "encode.txt");
+                this.DEST_FILE_NAME = sourceFileName.replace(".txt", "Encoded.txt");
             } else {
-                this.DEST_FILE_NAME = sourceFileName + "encode.txt";
+                this.DEST_FILE_NAME = sourceFileName + "Encoded.txt";
             }
         } else {
             this.SOURCE_FILE_NAME = "";

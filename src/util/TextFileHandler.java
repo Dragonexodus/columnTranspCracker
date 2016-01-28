@@ -17,10 +17,11 @@ public class TextFileHandler {
 
         this.TEXT_FILE = new File(path);
         if (!this.TEXT_FILE.exists()) {
-
+        	System.out.println("Datei: " + path + " existiert nicht, wird erstellt");
             try {
                 this.TEXT_FILE.createNewFile();
             } catch (IOException e) {
+            	e.printStackTrace();
                 System.out.println("TextFile Creation failed");
             }
         }
