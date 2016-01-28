@@ -35,9 +35,10 @@ public class Encoder {
         TRANSPOSITION = new Transposition(transposition);
     }
 
-    public int encodeFile() {
+    public int encodeToFile() {
         int returnCode = 0;
 
+        System.out.print("Start encoding...");
         TextFileHandler inFileText = new TextFileHandler(SOURCE_FILE_NAME);
         String text = inFileText.readText();
 
@@ -46,8 +47,18 @@ public class Encoder {
                 text = replaceAndFill(text);
                 BlockMatrix column = new BlockMatrix(text.toCharArray(), this.TRANSPOSITION, true);
                 column.transpose();
+                System.out.println("\t\t\t\t\t\t\t\tdone");
+                
                 returnCode = writeEncodedText(column);
+                if(returnCode == 0){
+                	
+                }
+                else{
+                	
+                }
+                
             } else {
+            	
                 return -1;
             }
 
@@ -88,6 +99,20 @@ public class Encoder {
             }
         }
         return text;
+    }
+    
+    private String replaceAndFill2(String text){
+    	
+    	// Entefernen aller Satzzeichen und leerzeichen
+    	text = text.replaceAll(("[^0-9a-zA-Z]"), "");
+    	
+    	int suffix = (int) Math.ceil((double)text.length() / this.TRANSPOSITION.getBlockLength());
+    	suffix = (int) Math.ceil((double)suffix / 5);
+    	int extend = suffix*this.TRANSPOSITION.getBlockLength() - text.length(); 
+    	for(int i = 0; i < extend ; extend ++){
+    		text += (char) (new Random().nextInt(25) + 65);
+    	}
+    	return text;
     }
 
     /**

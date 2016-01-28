@@ -38,27 +38,34 @@ public class BlockMatrix {
         this.BLOCK_MATRIX = new char[this.LINE_LENGTH][t.getBlockLength()]; // Initialisiere Block-Matrix
 
         if (!klartextMatrix)    // Geheimtext-Matrix
-            for (int i = 0; i < t.getBlockLength(); i++) {      // Spalte
-                for (int j = 0; j < this.LINE_LENGTH; j++) {    // Zeile
+        {
+        	for (int column = 0; column < t.getBlockLength(); column++) {   // Spalte
+        		
+                for (int row = 0; row < this.LINE_LENGTH; row++) {    		// Zeile
 
                     // Ermitteln der aktuellen Position in PLAIN-Text Zeichenkette
-                    if (i * LINE_LENGTH + j < text.length)
-                        BLOCK_MATRIX[j][i] = text[i * this.LINE_LENGTH + j];
+                	
+                    if (column * LINE_LENGTH + row < text.length)
+                        BLOCK_MATRIX[row][column] = text[column * this.LINE_LENGTH + row];
                     else
                         System.out.println("ERROR: BlockMatrix: Konstruktor !");
                 }
             }
-        else                    // Klartext-Matrix
-            for (int i = 0; i < this.LINE_LENGTH; i++) {        // Zeile
-                for (int j = 0; j < t.getBlockLength(); j++) {  // Spalte
+        }
+        
+        else {	// Klartext-Matrix
+        	
+        	for (int row = 0; row < this.LINE_LENGTH; row++) {        // Zeile
+                for (int column = 0; column < t.getBlockLength(); column++) {  // Spalte
 
                     // Ermitteln der aktuellen Position in PLAIN-Text Zeichenkette
-                    if (i * t.getBlockLength() + j < text.length)
-                        BLOCK_MATRIX[i][j] = text[i * t.getBlockLength() + j];
+                    if (row * t.getBlockLength() + column < text.length)
+                        BLOCK_MATRIX[row][column] = text[row * t.getBlockLength() + column];
                     else
-                        BLOCK_MATRIX[i][j] = '_';
+                        BLOCK_MATRIX[row][column] = '_';
                 }
             }
+        }            
     }
 
     public void transpose() {

@@ -16,12 +16,19 @@ public class TextFileHandler {
     public TextFileHandler(String path) {
 
         this.TEXT_FILE = new File(path);
+        
         if (!this.TEXT_FILE.exists()) {
-        	System.out.println("Datei: " + path + " existiert nicht, wird erstellt");
+        	
+        	System.out.print("Datei: " + path + " existiert nicht, wird erstellt... ");
             try {
+            	
                 this.TEXT_FILE.createNewFile();
+                System.out.println("\tdone");
+                
             } catch (IOException e) {
-            	e.printStackTrace();
+            	
+            	System.out.println("\tfailed");
+            	//e.printStackTrace();
                 System.out.println("TextFile Creation failed");
             }
         }
@@ -33,10 +40,12 @@ public class TextFileHandler {
         BufferedReader reader;
         String content = "";
         try {
+        	
             reader = new BufferedReader(new FileReader(this.TEXT_FILE));
             String tmp;
             while ((tmp = reader.readLine()) != null) content += tmp;
             reader.close();
+            
         } catch (FileNotFoundException fnfe) {
             System.out.println("Datei nicht gefunden!");
         } catch (EOFException eofe) {
@@ -57,7 +66,9 @@ public class TextFileHandler {
 
         try {
             writer = new BufferedWriter(new FileWriter(this.TEXT_FILE));
+            System.out.print("Write to file: " + TEXT_FILE.getName() + "... ");
             writer.write(text);
+            System.out.println("\t\t\t\t\tdone");
             writer.close();
         } catch (FileNotFoundException fnfe) {
 

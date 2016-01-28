@@ -20,12 +20,12 @@ public class DecoderTest {
 		if(!new File("ressource/testOutputEncoded.txt").exists()){
 			
 			Encoder enc = new Encoder("5,4,3,2,1,0","ressource/testOutput.txt");
-			enc.encodeFile();
+			enc.encodeToFile();
 		}
 		
 		
 		Decoder dec = new Decoder("5,4,3,2,1,0","ressource/testOutputEncoded.txt");
-		dec.decode();
+		dec.decodeToFile();
 		in = new TextFileHandler("ressource/testOutputEncodedDecoded.txt");
 		String actual = in.readText();
 		

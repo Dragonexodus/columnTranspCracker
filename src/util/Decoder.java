@@ -29,7 +29,7 @@ public class Decoder {
 		this.createFiles();
 	}
 	
-	public boolean decode(){
+	public boolean decodeToFile(){
 		
 		BlockMatrix bm = new BlockMatrix(in.readText().toCharArray(), this.TRANSPOSITION, false);
 		
@@ -37,7 +37,7 @@ public class Decoder {
 		bm.transpose();		
 			
 		String plainText = "";
-		
+		System.out.print("Start decoding...");
 		// Zeilenweises Auslesen der Block-Matrix
 		for(int rows = 0; rows < bm.getLineLength() ; rows ++ ){
 			
@@ -48,7 +48,8 @@ public class Decoder {
 			}
 			
 		}
-		
+		System.out.println("\t\t\t\t\t\t\t\tdone");
+
 		return out.writeText(plainText);	
 		
 	}
