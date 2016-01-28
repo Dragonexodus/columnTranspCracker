@@ -14,9 +14,9 @@ public class Main {
     
     private static void showCoding(){
     	
-    	Encoder enc = new Encoder("4,3,2,1,0","ressource/testFile.txt");
+    	Encoder enc = new Encoder("5,4,3,2,1,0","ressource/testFile.txt");
     	enc.encodeToFile();
-    	Decoder dec = new Decoder("4,3,2,1,0","ressource/testFileEncoded.txt");
+    	Decoder dec = new Decoder("5,4,3,2,1,0","ressource/testFileEncoded.txt");
     	dec.decodeToFile();
     	
     }

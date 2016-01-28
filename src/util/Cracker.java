@@ -296,7 +296,7 @@ public class Cracker {
                                     m = kandidat.getFirstMatchCol() + 1;
                                 else {
                                     i++;
-                                    m = -1;
+                                    m = 0;
                                 }
                                 foundCount = 0;
 //                                kandidat.print();
